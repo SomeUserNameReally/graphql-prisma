@@ -1,0 +1,5 @@
+node_modules/
+.vdcode/
+.idea/
+generated/
+.env
