@@ -1,14 +1,18 @@
 import "reflect-metadata";
+import "class-validator";
 
 import { ApolloServer } from "apollo-server";
 import { buildSchema } from "type-graphql";
 import resolvers from "./resolvers";
+import { PrismaClient } from "@prisma/client";
 
 export class Server {
     private static server: ApolloServer;
 
     static async init(): Promise<void> {
         if (Server.server) return;
+
+        const prisma = new PrismaClient();
 
         // ... Building schema here
         const schema = await buildSchema({
@@ -19,7 +23,10 @@ export class Server {
         // Create the GraphQL server
         Server.server = new ApolloServer({
             schema,
-            playground: true
+            playground: true,
+            context: {
+                prisma
+            }
         });
 
         // Start the server

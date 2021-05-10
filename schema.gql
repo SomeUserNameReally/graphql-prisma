@@ -26,6 +26,33 @@ input IntFilter {
   notIn: [Int!]
 }
 
+input IntNullableFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntNullableFilter
+  notIn: [Int!]
+}
+
+input IntNullableWithAggregatesFilter {
+  avg: NestedFloatNullableFilter
+  count: NestedIntNullableFilter
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  max: NestedIntNullableFilter
+  min: NestedIntNullableFilter
+  not: NestedIntNullableWithAggregatesFilter
+  notIn: [Int!]
+  sum: NestedIntNullableFilter
+}
+
 input IntWithAggregatesFilter {
   avg: NestedFloatFilter
   count: NestedIntFilter
@@ -63,6 +90,17 @@ input NestedFloatFilter {
   notIn: [Float!]
 }
 
+input NestedFloatNullableFilter {
+  equals: Float
+  gt: Float
+  gte: Float
+  in: [Float!]
+  lt: Float
+  lte: Float
+  not: NestedFloatNullableFilter
+  notIn: [Float!]
+}
+
 input NestedIntFilter {
   equals: Int
   gt: Int
@@ -72,6 +110,33 @@ input NestedIntFilter {
   lte: Int
   not: NestedIntFilter
   notIn: [Int!]
+}
+
+input NestedIntNullableFilter {
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  not: NestedIntNullableFilter
+  notIn: [Int!]
+}
+
+input NestedIntNullableWithAggregatesFilter {
+  avg: NestedFloatNullableFilter
+  count: NestedIntNullableFilter
+  equals: Int
+  gt: Int
+  gte: Int
+  in: [Int!]
+  lt: Int
+  lte: Int
+  max: NestedIntNullableFilter
+  min: NestedIntNullableFilter
+  not: NestedIntNullableWithAggregatesFilter
+  notIn: [Int!]
+  sum: NestedIntNullableFilter
 }
 
 input NestedIntWithAggregatesFilter {
@@ -119,6 +184,14 @@ input NestedStringWithAggregatesFilter {
   not: NestedStringWithAggregatesFilter
   notIn: [String!]
   startsWith: String
+}
+
+input NullableIntFieldUpdateOperationsInput {
+  decrement: Int
+  divide: Int
+  increment: Int
+  multiply: Int
+  set: Int
 }
 
 type Query {
@@ -177,98 +250,126 @@ input StringWithAggregatesFilter {
 }
 
 type User {
+  age: Int
   email: String!
   firstName: String!
   id: Int!
+  lastName: String!
 }
 
 type UserAvgAggregate {
+  age: Float
   id: Float
 }
 
 type UserCountAggregate {
   _all: Int!
+  age: Int!
   email: Int!
   firstName: Int!
   id: Int!
+  lastName: Int!
 }
 
 input UserCreateInput {
+  age: Int
   email: String!
   firstName: String!
+  lastName: String!
 }
 
 input UserCreateManyInput {
+  age: Int
   email: String!
   firstName: String!
   id: Int
+  lastName: String!
 }
 
 type UserGroupBy {
+  age: Int
   avg: UserAvgAggregate
   count: UserCountAggregate
   email: String!
   firstName: String!
   id: Int!
+  lastName: String!
   max: UserMaxAggregate
   min: UserMinAggregate
   sum: UserSumAggregate
 }
 
 type UserMaxAggregate {
+  age: Int
   email: String
   firstName: String
   id: Int
+  lastName: String
 }
 
 type UserMinAggregate {
+  age: Int
   email: String
   firstName: String
   id: Int
+  lastName: String
 }
 
 input UserOrderByInput {
+  age: SortOrder
   email: SortOrder
   firstName: SortOrder
   id: SortOrder
+  lastName: SortOrder
 }
 
 enum UserScalarFieldEnum {
+  age
   email
   firstName
   id
+  lastName
 }
 
 input UserScalarWhereWithAggregatesInput {
   AND: [UserScalarWhereWithAggregatesInput!]
   NOT: [UserScalarWhereWithAggregatesInput!]
   OR: [UserScalarWhereWithAggregatesInput!]
+  age: IntNullableWithAggregatesFilter
   email: StringWithAggregatesFilter
   firstName: StringWithAggregatesFilter
   id: IntWithAggregatesFilter
+  lastName: StringWithAggregatesFilter
 }
 
 type UserSumAggregate {
+  age: Int
   id: Int
 }
 
 input UserUpdateInput {
+  age: NullableIntFieldUpdateOperationsInput
   email: StringFieldUpdateOperationsInput
   firstName: StringFieldUpdateOperationsInput
+  lastName: StringFieldUpdateOperationsInput
 }
 
 input UserUpdateManyMutationInput {
+  age: NullableIntFieldUpdateOperationsInput
   email: StringFieldUpdateOperationsInput
   firstName: StringFieldUpdateOperationsInput
+  lastName: StringFieldUpdateOperationsInput
 }
 
 input UserWhereInput {
   AND: [UserWhereInput!]
   NOT: [UserWhereInput!]
   OR: [UserWhereInput!]
+  age: IntNullableFilter
   email: StringFilter
   firstName: StringFilter
   id: IntFilter
+  lastName: StringFilter
 }
 
 input UserWhereUniqueInput {
