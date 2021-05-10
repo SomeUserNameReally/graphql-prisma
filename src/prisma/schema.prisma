@@ -16,9 +16,34 @@ generator typegraphql {
 }
 
 model User {
-  id        Int    @id @default(autoincrement())
-  email     String @unique
-  firstName String @db.VarChar(255)
-  lastName  String @db.VarChar(255)
-  age       Int?   @db.Integer
+  id        String    @id @default(uuid())
+  updatedAt DateTime  @default(now()) @updatedAt
+  email     String    @unique
+  firstName String    @db.VarChar(255)
+  lastName  String    @db.VarChar(255)
+  age       Int?      @db.Integer
+  posts     Post[]
+  comments  Comment[]
+}
+
+model Post {
+  id        String    @id @default(uuid())
+  updatedAt DateTime  @default(now()) @updatedAt
+  author    User      @relation(fields: [authorId], references: [id])
+  authorId  String
+  title     String    @db.VarChar(255)
+  body      String
+  published Boolean   @default(true)
+  comments  Comment[]
+}
+
+model Comment {
+  id        String   @id @default(uuid())
+  updatedAt DateTime @default(now()) @updatedAt
+  author    User     @relation(fields: [userId], references: [id])
+  date      DateTime
+  post      Post     @relation(fields: [postId], references: [id])
+  text      String   @db.VarChar(255)
+  userId    String
+  postId    String
 }

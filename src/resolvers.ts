@@ -1,4 +1,18 @@
 import { NonEmptyArray } from "type-graphql";
-import { User, UserCrudResolver } from "./prisma/generated/type-graphql";
+import {
+    UserCrudResolver,
+    PostCrudResolver,
+    CommentCrudResolver,
+    UserRelationsResolver,
+    PostRelationsResolver,
+    CommentRelationsResolver
+} from "./prisma/generated/type-graphql";
 
-export default [User, UserCrudResolver] as NonEmptyArray<Function>;
+export default [
+    UserCrudResolver,
+    PostCrudResolver,
+    CommentCrudResolver,
+    UserRelationsResolver,
+    PostRelationsResolver,
+    CommentRelationsResolver
+] as NonEmptyArray<Function>;

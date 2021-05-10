@@ -7,6 +7,18 @@ type AffectedRowsOutput {
   count: Int!
 }
 
+type AggregateComment {
+  count: CommentCountAggregate
+  max: CommentMaxAggregate
+  min: CommentMinAggregate
+}
+
+type AggregatePost {
+  count: PostCountAggregate
+  max: PostMaxAggregate
+  min: PostMinAggregate
+}
+
 type AggregateUser {
   avg: UserAvgAggregate
   count: UserCountAggregate
@@ -15,15 +27,328 @@ type AggregateUser {
   sum: UserSumAggregate
 }
 
-input IntFilter {
-  equals: Int
-  gt: Int
-  gte: Int
-  in: [Int!]
-  lt: Int
-  lte: Int
-  not: NestedIntFilter
-  notIn: [Int!]
+input BoolFieldUpdateOperationsInput {
+  set: Boolean
+}
+
+input BoolFilter {
+  equals: Boolean
+  not: NestedBoolFilter
+}
+
+input BoolWithAggregatesFilter {
+  count: NestedIntFilter
+  equals: Boolean
+  max: NestedBoolFilter
+  min: NestedBoolFilter
+  not: NestedBoolWithAggregatesFilter
+}
+
+type Comment {
+  author: User!
+  date: DateTime!
+  id: String!
+  post: Post!
+  postId: String!
+  text: String!
+  userId: String!
+}
+
+type CommentCountAggregate {
+  _all: Int!
+  date: Int!
+  id: Int!
+  postId: Int!
+  text: Int!
+  userId: Int!
+}
+
+input CommentCreateInput {
+  author: UserCreateNestedOneWithoutCommentInput!
+  date: DateTime!
+  id: String
+  post: PostCreateNestedOneWithoutCommentInput!
+  text: String!
+}
+
+input CommentCreateManyAuthorInput {
+  date: DateTime!
+  id: String
+  postId: String!
+  text: String!
+}
+
+input CommentCreateManyAuthorInputEnvelope {
+  data: [CommentCreateManyAuthorInput!]!
+  skipDuplicates: Boolean
+}
+
+input CommentCreateManyInput {
+  date: DateTime!
+  id: String
+  postId: String!
+  text: String!
+  userId: String!
+}
+
+input CommentCreateManyPostInput {
+  date: DateTime!
+  id: String
+  text: String!
+  userId: String!
+}
+
+input CommentCreateManyPostInputEnvelope {
+  data: [CommentCreateManyPostInput!]!
+  skipDuplicates: Boolean
+}
+
+input CommentCreateNestedManyWithoutAuthorInput {
+  connect: [CommentWhereUniqueInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutAuthorInput!]
+  create: [CommentCreateWithoutAuthorInput!]
+  createMany: CommentCreateManyAuthorInputEnvelope
+}
+
+input CommentCreateNestedManyWithoutPostInput {
+  connect: [CommentWhereUniqueInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutPostInput!]
+  create: [CommentCreateWithoutPostInput!]
+  createMany: CommentCreateManyPostInputEnvelope
+}
+
+input CommentCreateOrConnectWithoutAuthorInput {
+  create: CommentCreateWithoutAuthorInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentCreateOrConnectWithoutPostInput {
+  create: CommentCreateWithoutPostInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentCreateWithoutAuthorInput {
+  date: DateTime!
+  id: String
+  post: PostCreateNestedOneWithoutCommentInput!
+  text: String!
+}
+
+input CommentCreateWithoutPostInput {
+  author: UserCreateNestedOneWithoutCommentInput!
+  date: DateTime!
+  id: String
+  text: String!
+}
+
+type CommentGroupBy {
+  count: CommentCountAggregate
+  date: DateTime!
+  id: String!
+  max: CommentMaxAggregate
+  min: CommentMinAggregate
+  postId: String!
+  text: String!
+  userId: String!
+}
+
+input CommentListRelationFilter {
+  every: CommentWhereInput
+  none: CommentWhereInput
+  some: CommentWhereInput
+}
+
+type CommentMaxAggregate {
+  date: DateTime
+  id: String
+  postId: String
+  text: String
+  userId: String
+}
+
+type CommentMinAggregate {
+  date: DateTime
+  id: String
+  postId: String
+  text: String
+  userId: String
+}
+
+input CommentOrderByInput {
+  date: SortOrder
+  id: SortOrder
+  postId: SortOrder
+  text: SortOrder
+  userId: SortOrder
+}
+
+enum CommentScalarFieldEnum {
+  date
+  id
+  postId
+  text
+  userId
+}
+
+input CommentScalarWhereInput {
+  AND: [CommentScalarWhereInput!]
+  NOT: [CommentScalarWhereInput!]
+  OR: [CommentScalarWhereInput!]
+  date: DateTimeFilter
+  id: StringFilter
+  postId: StringFilter
+  text: StringFilter
+  userId: StringFilter
+}
+
+input CommentScalarWhereWithAggregatesInput {
+  AND: [CommentScalarWhereWithAggregatesInput!]
+  NOT: [CommentScalarWhereWithAggregatesInput!]
+  OR: [CommentScalarWhereWithAggregatesInput!]
+  date: DateTimeWithAggregatesFilter
+  id: StringWithAggregatesFilter
+  postId: StringWithAggregatesFilter
+  text: StringWithAggregatesFilter
+  userId: StringWithAggregatesFilter
+}
+
+input CommentUpdateInput {
+  author: UserUpdateOneRequiredWithoutCommentInput
+  date: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  post: PostUpdateOneRequiredWithoutCommentInput
+  text: StringFieldUpdateOperationsInput
+}
+
+input CommentUpdateManyMutationInput {
+  date: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  text: StringFieldUpdateOperationsInput
+}
+
+input CommentUpdateManyWithWhereWithoutAuthorInput {
+  data: CommentUpdateManyMutationInput!
+  where: CommentScalarWhereInput!
+}
+
+input CommentUpdateManyWithWhereWithoutPostInput {
+  data: CommentUpdateManyMutationInput!
+  where: CommentScalarWhereInput!
+}
+
+input CommentUpdateManyWithoutAuthorInput {
+  connect: [CommentWhereUniqueInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutAuthorInput!]
+  create: [CommentCreateWithoutAuthorInput!]
+  createMany: CommentCreateManyAuthorInputEnvelope
+  delete: [CommentWhereUniqueInput!]
+  deleteMany: [CommentScalarWhereInput!]
+  disconnect: [CommentWhereUniqueInput!]
+  set: [CommentWhereUniqueInput!]
+  update: [CommentUpdateWithWhereUniqueWithoutAuthorInput!]
+  updateMany: [CommentUpdateManyWithWhereWithoutAuthorInput!]
+  upsert: [CommentUpsertWithWhereUniqueWithoutAuthorInput!]
+}
+
+input CommentUpdateManyWithoutPostInput {
+  connect: [CommentWhereUniqueInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutPostInput!]
+  create: [CommentCreateWithoutPostInput!]
+  createMany: CommentCreateManyPostInputEnvelope
+  delete: [CommentWhereUniqueInput!]
+  deleteMany: [CommentScalarWhereInput!]
+  disconnect: [CommentWhereUniqueInput!]
+  set: [CommentWhereUniqueInput!]
+  update: [CommentUpdateWithWhereUniqueWithoutPostInput!]
+  updateMany: [CommentUpdateManyWithWhereWithoutPostInput!]
+  upsert: [CommentUpsertWithWhereUniqueWithoutPostInput!]
+}
+
+input CommentUpdateWithWhereUniqueWithoutAuthorInput {
+  data: CommentUpdateWithoutAuthorInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentUpdateWithWhereUniqueWithoutPostInput {
+  data: CommentUpdateWithoutPostInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentUpdateWithoutAuthorInput {
+  date: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  post: PostUpdateOneRequiredWithoutCommentInput
+  text: StringFieldUpdateOperationsInput
+}
+
+input CommentUpdateWithoutPostInput {
+  author: UserUpdateOneRequiredWithoutCommentInput
+  date: DateTimeFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  text: StringFieldUpdateOperationsInput
+}
+
+input CommentUpsertWithWhereUniqueWithoutAuthorInput {
+  create: CommentCreateWithoutAuthorInput!
+  update: CommentUpdateWithoutAuthorInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentUpsertWithWhereUniqueWithoutPostInput {
+  create: CommentCreateWithoutPostInput!
+  update: CommentUpdateWithoutPostInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentWhereInput {
+  AND: [CommentWhereInput!]
+  NOT: [CommentWhereInput!]
+  OR: [CommentWhereInput!]
+  author: UserRelationFilter
+  date: DateTimeFilter
+  id: StringFilter
+  post: PostRelationFilter
+  postId: StringFilter
+  text: StringFilter
+  userId: StringFilter
+}
+
+input CommentWhereUniqueInput {
+  id: String
+}
+
+"""
+The javascript `Date` as string. Type represents date and time as the ISO Date string.
+"""
+scalar DateTime
+
+input DateTimeFieldUpdateOperationsInput {
+  set: DateTime
+}
+
+input DateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
+
+input DateTimeWithAggregatesFilter {
+  count: NestedIntFilter
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  max: NestedDateTimeFilter
+  min: NestedDateTimeFilter
+  not: NestedDateTimeWithAggregatesFilter
+  notIn: [DateTime!]
 }
 
 input IntNullableFilter {
@@ -53,41 +378,66 @@ input IntNullableWithAggregatesFilter {
   sum: NestedIntNullableFilter
 }
 
-input IntWithAggregatesFilter {
-  avg: NestedFloatFilter
-  count: NestedIntFilter
-  equals: Int
-  gt: Int
-  gte: Int
-  in: [Int!]
-  lt: Int
-  lte: Int
-  max: NestedIntFilter
-  min: NestedIntFilter
-  not: NestedIntWithAggregatesFilter
-  notIn: [Int!]
-  sum: NestedIntFilter
-}
-
 type Mutation {
+  createComment(data: CommentCreateInput!): Comment!
+  createManyComment(data: [CommentCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createManyPost(data: [PostCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
   createManyUser(data: [UserCreateManyInput!]!, skipDuplicates: Boolean): AffectedRowsOutput!
+  createPost(data: PostCreateInput!): Post!
   createUser(data: UserCreateInput!): User!
+  deleteComment(where: CommentWhereUniqueInput!): Comment
+  deleteManyComment(where: CommentWhereInput): AffectedRowsOutput!
+  deleteManyPost(where: PostWhereInput): AffectedRowsOutput!
   deleteManyUser(where: UserWhereInput): AffectedRowsOutput!
+  deletePost(where: PostWhereUniqueInput!): Post
   deleteUser(where: UserWhereUniqueInput!): User
+  updateComment(data: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment
+  updateManyComment(data: CommentUpdateManyMutationInput!, where: CommentWhereInput): AffectedRowsOutput!
+  updateManyPost(data: PostUpdateManyMutationInput!, where: PostWhereInput): AffectedRowsOutput!
   updateManyUser(data: UserUpdateManyMutationInput!, where: UserWhereInput): AffectedRowsOutput!
+  updatePost(data: PostUpdateInput!, where: PostWhereUniqueInput!): Post
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  upsertComment(create: CommentCreateInput!, update: CommentUpdateInput!, where: CommentWhereUniqueInput!): Comment!
+  upsertPost(create: PostCreateInput!, update: PostUpdateInput!, where: PostWhereUniqueInput!): Post!
   upsertUser(create: UserCreateInput!, update: UserUpdateInput!, where: UserWhereUniqueInput!): User!
 }
 
-input NestedFloatFilter {
-  equals: Float
-  gt: Float
-  gte: Float
-  in: [Float!]
-  lt: Float
-  lte: Float
-  not: NestedFloatFilter
-  notIn: [Float!]
+input NestedBoolFilter {
+  equals: Boolean
+  not: NestedBoolFilter
+}
+
+input NestedBoolWithAggregatesFilter {
+  count: NestedIntFilter
+  equals: Boolean
+  max: NestedBoolFilter
+  min: NestedBoolFilter
+  not: NestedBoolWithAggregatesFilter
+}
+
+input NestedDateTimeFilter {
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  not: NestedDateTimeFilter
+  notIn: [DateTime!]
+}
+
+input NestedDateTimeWithAggregatesFilter {
+  count: NestedIntFilter
+  equals: DateTime
+  gt: DateTime
+  gte: DateTime
+  in: [DateTime!]
+  lt: DateTime
+  lte: DateTime
+  max: NestedDateTimeFilter
+  min: NestedDateTimeFilter
+  not: NestedDateTimeWithAggregatesFilter
+  notIn: [DateTime!]
 }
 
 input NestedFloatNullableFilter {
@@ -139,22 +489,6 @@ input NestedIntNullableWithAggregatesFilter {
   sum: NestedIntNullableFilter
 }
 
-input NestedIntWithAggregatesFilter {
-  avg: NestedFloatFilter
-  count: NestedIntFilter
-  equals: Int
-  gt: Int
-  gte: Int
-  in: [Int!]
-  lt: Int
-  lte: Int
-  max: NestedIntFilter
-  min: NestedIntFilter
-  not: NestedIntWithAggregatesFilter
-  notIn: [Int!]
-  sum: NestedIntFilter
-}
-
 input NestedStringFilter {
   contains: String
   endsWith: String
@@ -194,10 +528,294 @@ input NullableIntFieldUpdateOperationsInput {
   set: Int
 }
 
+type Post {
+  Comment(cursor: CommentWhereUniqueInput, distinct: [CommentScalarFieldEnum!], orderBy: [CommentOrderByInput!], skip: Int, take: Int, where: CommentWhereInput): [Comment!]!
+  author: User!
+  authorId: String!
+  body: String!
+  id: String!
+  published: Boolean!
+  title: String!
+  updatedAt: DateTime!
+}
+
+type PostCountAggregate {
+  _all: Int!
+  authorId: Int!
+  body: Int!
+  id: Int!
+  published: Int!
+  title: Int!
+  updatedAt: Int!
+}
+
+input PostCreateInput {
+  Comment: CommentCreateNestedManyWithoutPostInput
+  author: UserCreateNestedOneWithoutPostsInput!
+  body: String!
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+}
+
+input PostCreateManyAuthorInput {
+  body: String!
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+}
+
+input PostCreateManyAuthorInputEnvelope {
+  data: [PostCreateManyAuthorInput!]!
+  skipDuplicates: Boolean
+}
+
+input PostCreateManyInput {
+  authorId: String!
+  body: String!
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+}
+
+input PostCreateNestedManyWithoutAuthorInput {
+  connect: [PostWhereUniqueInput!]
+  connectOrCreate: [PostCreateOrConnectWithoutAuthorInput!]
+  create: [PostCreateWithoutAuthorInput!]
+  createMany: PostCreateManyAuthorInputEnvelope
+}
+
+input PostCreateNestedOneWithoutCommentInput {
+  connect: PostWhereUniqueInput
+  connectOrCreate: PostCreateOrConnectWithoutCommentInput
+  create: PostCreateWithoutCommentInput
+}
+
+input PostCreateOrConnectWithoutAuthorInput {
+  create: PostCreateWithoutAuthorInput!
+  where: PostWhereUniqueInput!
+}
+
+input PostCreateOrConnectWithoutCommentInput {
+  create: PostCreateWithoutCommentInput!
+  where: PostWhereUniqueInput!
+}
+
+input PostCreateWithoutAuthorInput {
+  Comment: CommentCreateNestedManyWithoutPostInput
+  body: String!
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+}
+
+input PostCreateWithoutCommentInput {
+  author: UserCreateNestedOneWithoutPostsInput!
+  body: String!
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+}
+
+type PostGroupBy {
+  authorId: String!
+  body: String!
+  count: PostCountAggregate
+  id: String!
+  max: PostMaxAggregate
+  min: PostMinAggregate
+  published: Boolean!
+  title: String!
+  updatedAt: DateTime!
+}
+
+input PostListRelationFilter {
+  every: PostWhereInput
+  none: PostWhereInput
+  some: PostWhereInput
+}
+
+type PostMaxAggregate {
+  authorId: String
+  body: String
+  id: String
+  published: Boolean
+  title: String
+  updatedAt: DateTime
+}
+
+type PostMinAggregate {
+  authorId: String
+  body: String
+  id: String
+  published: Boolean
+  title: String
+  updatedAt: DateTime
+}
+
+input PostOrderByInput {
+  authorId: SortOrder
+  body: SortOrder
+  id: SortOrder
+  published: SortOrder
+  title: SortOrder
+  updatedAt: SortOrder
+}
+
+input PostRelationFilter {
+  is: PostWhereInput
+  isNot: PostWhereInput
+}
+
+enum PostScalarFieldEnum {
+  authorId
+  body
+  id
+  published
+  title
+  updatedAt
+}
+
+input PostScalarWhereInput {
+  AND: [PostScalarWhereInput!]
+  NOT: [PostScalarWhereInput!]
+  OR: [PostScalarWhereInput!]
+  authorId: StringFilter
+  body: StringFilter
+  id: StringFilter
+  published: BoolFilter
+  title: StringFilter
+  updatedAt: DateTimeFilter
+}
+
+input PostScalarWhereWithAggregatesInput {
+  AND: [PostScalarWhereWithAggregatesInput!]
+  NOT: [PostScalarWhereWithAggregatesInput!]
+  OR: [PostScalarWhereWithAggregatesInput!]
+  authorId: StringWithAggregatesFilter
+  body: StringWithAggregatesFilter
+  id: StringWithAggregatesFilter
+  published: BoolWithAggregatesFilter
+  title: StringWithAggregatesFilter
+  updatedAt: DateTimeWithAggregatesFilter
+}
+
+input PostUpdateInput {
+  Comment: CommentUpdateManyWithoutPostInput
+  author: UserUpdateOneRequiredWithoutPostsInput
+  body: StringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  published: BoolFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input PostUpdateManyMutationInput {
+  body: StringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  published: BoolFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input PostUpdateManyWithWhereWithoutAuthorInput {
+  data: PostUpdateManyMutationInput!
+  where: PostScalarWhereInput!
+}
+
+input PostUpdateManyWithoutAuthorInput {
+  connect: [PostWhereUniqueInput!]
+  connectOrCreate: [PostCreateOrConnectWithoutAuthorInput!]
+  create: [PostCreateWithoutAuthorInput!]
+  createMany: PostCreateManyAuthorInputEnvelope
+  delete: [PostWhereUniqueInput!]
+  deleteMany: [PostScalarWhereInput!]
+  disconnect: [PostWhereUniqueInput!]
+  set: [PostWhereUniqueInput!]
+  update: [PostUpdateWithWhereUniqueWithoutAuthorInput!]
+  updateMany: [PostUpdateManyWithWhereWithoutAuthorInput!]
+  upsert: [PostUpsertWithWhereUniqueWithoutAuthorInput!]
+}
+
+input PostUpdateOneRequiredWithoutCommentInput {
+  connect: PostWhereUniqueInput
+  connectOrCreate: PostCreateOrConnectWithoutCommentInput
+  create: PostCreateWithoutCommentInput
+  update: PostUpdateWithoutCommentInput
+  upsert: PostUpsertWithoutCommentInput
+}
+
+input PostUpdateWithWhereUniqueWithoutAuthorInput {
+  data: PostUpdateWithoutAuthorInput!
+  where: PostWhereUniqueInput!
+}
+
+input PostUpdateWithoutAuthorInput {
+  Comment: CommentUpdateManyWithoutPostInput
+  body: StringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  published: BoolFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input PostUpdateWithoutCommentInput {
+  author: UserUpdateOneRequiredWithoutPostsInput
+  body: StringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  published: BoolFieldUpdateOperationsInput
+  title: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input PostUpsertWithWhereUniqueWithoutAuthorInput {
+  create: PostCreateWithoutAuthorInput!
+  update: PostUpdateWithoutAuthorInput!
+  where: PostWhereUniqueInput!
+}
+
+input PostUpsertWithoutCommentInput {
+  create: PostCreateWithoutCommentInput!
+  update: PostUpdateWithoutCommentInput!
+}
+
+input PostWhereInput {
+  AND: [PostWhereInput!]
+  Comment: CommentListRelationFilter
+  NOT: [PostWhereInput!]
+  OR: [PostWhereInput!]
+  author: UserRelationFilter
+  authorId: StringFilter
+  body: StringFilter
+  id: StringFilter
+  published: BoolFilter
+  title: StringFilter
+  updatedAt: DateTimeFilter
+}
+
+input PostWhereUniqueInput {
+  id: String
+}
+
 type Query {
+  aggregateComment(cursor: CommentWhereUniqueInput, orderBy: [CommentOrderByInput!], skip: Int, take: Int, where: CommentWhereInput): AggregateComment!
+  aggregatePost(cursor: PostWhereUniqueInput, orderBy: [PostOrderByInput!], skip: Int, take: Int, where: PostWhereInput): AggregatePost!
   aggregateUser(cursor: UserWhereUniqueInput, orderBy: [UserOrderByInput!], skip: Int, take: Int, where: UserWhereInput): AggregateUser!
+  comment(where: CommentWhereUniqueInput!): Comment
+  comments(cursor: CommentWhereUniqueInput, distinct: [CommentScalarFieldEnum!], orderBy: [CommentOrderByInput!], skip: Int, take: Int, where: CommentWhereInput): [Comment!]!
+  findFirstComment(cursor: CommentWhereUniqueInput, distinct: [CommentScalarFieldEnum!], orderBy: [CommentOrderByInput!], skip: Int, take: Int, where: CommentWhereInput): Comment
+  findFirstPost(cursor: PostWhereUniqueInput, distinct: [PostScalarFieldEnum!], orderBy: [PostOrderByInput!], skip: Int, take: Int, where: PostWhereInput): Post
   findFirstUser(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByInput!], skip: Int, take: Int, where: UserWhereInput): User
+  groupByComment(by: [CommentScalarFieldEnum!]!, having: CommentScalarWhereWithAggregatesInput, orderBy: [CommentOrderByInput!], skip: Int, take: Int, where: CommentWhereInput): [CommentGroupBy!]!
+  groupByPost(by: [PostScalarFieldEnum!]!, having: PostScalarWhereWithAggregatesInput, orderBy: [PostOrderByInput!], skip: Int, take: Int, where: PostWhereInput): [PostGroupBy!]!
   groupByUser(by: [UserScalarFieldEnum!]!, having: UserScalarWhereWithAggregatesInput, orderBy: [UserOrderByInput!], skip: Int, take: Int, where: UserWhereInput): [UserGroupBy!]!
+  post(where: PostWhereUniqueInput!): Post
+  posts(cursor: PostWhereUniqueInput, distinct: [PostScalarFieldEnum!], orderBy: [PostOrderByInput!], skip: Int, take: Int, where: PostWhereInput): [Post!]!
   user(where: UserWhereUniqueInput!): User
   users(cursor: UserWhereUniqueInput, distinct: [UserScalarFieldEnum!], orderBy: [UserOrderByInput!], skip: Int, take: Int, where: UserWhereInput): [User!]!
 }
@@ -250,16 +868,18 @@ input StringWithAggregatesFilter {
 }
 
 type User {
+  Comment(cursor: CommentWhereUniqueInput, distinct: [CommentScalarFieldEnum!], orderBy: [CommentOrderByInput!], skip: Int, take: Int, where: CommentWhereInput): [Comment!]!
   age: Int
   email: String!
   firstName: String!
-  id: Int!
+  id: String!
   lastName: String!
+  posts(cursor: PostWhereUniqueInput, distinct: [PostScalarFieldEnum!], orderBy: [PostOrderByInput!], skip: Int, take: Int, where: PostWhereInput): [Post!]!
+  updatedAt: DateTime!
 }
 
 type UserAvgAggregate {
   age: Float
-  id: Float
 }
 
 type UserCountAggregate {
@@ -269,21 +889,69 @@ type UserCountAggregate {
   firstName: Int!
   id: Int!
   lastName: Int!
+  updatedAt: Int!
 }
 
 input UserCreateInput {
+  Comment: CommentCreateNestedManyWithoutAuthorInput
   age: Int
   email: String!
   firstName: String!
+  id: String
   lastName: String!
+  posts: PostCreateNestedManyWithoutAuthorInput
+  updatedAt: DateTime
 }
 
 input UserCreateManyInput {
   age: Int
   email: String!
   firstName: String!
-  id: Int
+  id: String
   lastName: String!
+  updatedAt: DateTime
+}
+
+input UserCreateNestedOneWithoutCommentInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutCommentInput
+  create: UserCreateWithoutCommentInput
+}
+
+input UserCreateNestedOneWithoutPostsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutPostsInput
+  create: UserCreateWithoutPostsInput
+}
+
+input UserCreateOrConnectWithoutCommentInput {
+  create: UserCreateWithoutCommentInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutPostsInput {
+  create: UserCreateWithoutPostsInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateWithoutCommentInput {
+  age: Int
+  email: String!
+  firstName: String!
+  id: String
+  lastName: String!
+  posts: PostCreateNestedManyWithoutAuthorInput
+  updatedAt: DateTime
+}
+
+input UserCreateWithoutPostsInput {
+  Comment: CommentCreateNestedManyWithoutAuthorInput
+  age: Int
+  email: String!
+  firstName: String!
+  id: String
+  lastName: String!
+  updatedAt: DateTime
 }
 
 type UserGroupBy {
@@ -292,27 +960,30 @@ type UserGroupBy {
   count: UserCountAggregate
   email: String!
   firstName: String!
-  id: Int!
+  id: String!
   lastName: String!
   max: UserMaxAggregate
   min: UserMinAggregate
   sum: UserSumAggregate
+  updatedAt: DateTime!
 }
 
 type UserMaxAggregate {
   age: Int
   email: String
   firstName: String
-  id: Int
+  id: String
   lastName: String
+  updatedAt: DateTime
 }
 
 type UserMinAggregate {
   age: Int
   email: String
   firstName: String
-  id: Int
+  id: String
   lastName: String
+  updatedAt: DateTime
 }
 
 input UserOrderByInput {
@@ -321,6 +992,12 @@ input UserOrderByInput {
   firstName: SortOrder
   id: SortOrder
   lastName: SortOrder
+  updatedAt: SortOrder
+}
+
+input UserRelationFilter {
+  is: UserWhereInput
+  isNot: UserWhereInput
 }
 
 enum UserScalarFieldEnum {
@@ -329,6 +1006,7 @@ enum UserScalarFieldEnum {
   firstName
   id
   lastName
+  updatedAt
 }
 
 input UserScalarWhereWithAggregatesInput {
@@ -338,41 +1016,96 @@ input UserScalarWhereWithAggregatesInput {
   age: IntNullableWithAggregatesFilter
   email: StringWithAggregatesFilter
   firstName: StringWithAggregatesFilter
-  id: IntWithAggregatesFilter
+  id: StringWithAggregatesFilter
   lastName: StringWithAggregatesFilter
+  updatedAt: DateTimeWithAggregatesFilter
 }
 
 type UserSumAggregate {
   age: Int
-  id: Int
 }
 
 input UserUpdateInput {
+  Comment: CommentUpdateManyWithoutAuthorInput
   age: NullableIntFieldUpdateOperationsInput
   email: StringFieldUpdateOperationsInput
   firstName: StringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
   lastName: StringFieldUpdateOperationsInput
+  posts: PostUpdateManyWithoutAuthorInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
 input UserUpdateManyMutationInput {
   age: NullableIntFieldUpdateOperationsInput
   email: StringFieldUpdateOperationsInput
   firstName: StringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
   lastName: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserUpdateOneRequiredWithoutCommentInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutCommentInput
+  create: UserCreateWithoutCommentInput
+  update: UserUpdateWithoutCommentInput
+  upsert: UserUpsertWithoutCommentInput
+}
+
+input UserUpdateOneRequiredWithoutPostsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutPostsInput
+  create: UserCreateWithoutPostsInput
+  update: UserUpdateWithoutPostsInput
+  upsert: UserUpsertWithoutPostsInput
+}
+
+input UserUpdateWithoutCommentInput {
+  age: NullableIntFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  firstName: StringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  lastName: StringFieldUpdateOperationsInput
+  posts: PostUpdateManyWithoutAuthorInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserUpdateWithoutPostsInput {
+  Comment: CommentUpdateManyWithoutAuthorInput
+  age: NullableIntFieldUpdateOperationsInput
+  email: StringFieldUpdateOperationsInput
+  firstName: StringFieldUpdateOperationsInput
+  id: StringFieldUpdateOperationsInput
+  lastName: StringFieldUpdateOperationsInput
+  updatedAt: DateTimeFieldUpdateOperationsInput
+}
+
+input UserUpsertWithoutCommentInput {
+  create: UserCreateWithoutCommentInput!
+  update: UserUpdateWithoutCommentInput!
+}
+
+input UserUpsertWithoutPostsInput {
+  create: UserCreateWithoutPostsInput!
+  update: UserUpdateWithoutPostsInput!
 }
 
 input UserWhereInput {
   AND: [UserWhereInput!]
+  Comment: CommentListRelationFilter
   NOT: [UserWhereInput!]
   OR: [UserWhereInput!]
   age: IntNullableFilter
   email: StringFilter
   firstName: StringFilter
-  id: IntFilter
+  id: StringFilter
   lastName: StringFilter
+  posts: PostListRelationFilter
+  updatedAt: DateTimeFilter
 }
 
 input UserWhereUniqueInput {
   email: String
-  id: Int
+  id: String
 }
