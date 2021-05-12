@@ -14,5 +14,5 @@ export interface GraphPostActions extends GraphActions {
         id: string,
         data: PostCreateInput,
         context: GraphQLContext
-    ): Promise<Partial<User>>;
+    ): Promise<unknown>;
 }

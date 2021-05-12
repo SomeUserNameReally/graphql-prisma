@@ -16,10 +16,8 @@ export class PostActions implements GraphPostActions {
     async create(
         id: string,
         data: PostCreateInput,
-        @Ctx() context: GraphQLContext
+        @Ctx() { prisma }: GraphQLContext
     ) {
-        const { prisma } = context;
-
         const user = await prisma.user.findUnique({ where: { id } });
         if (!user) throw new Error("User not found!");
 
@@ -29,7 +27,16 @@ export class PostActions implements GraphPostActions {
                 author: {
                     select: {
                         id: true,
-                        firstName: true
+                        firstName: true,
+                        lastName: true,
+                        email: true,
+                        posts: {
+                            select: {
+                                id: true,
+                                title: true,
+                                published: true
+                            }
+                        }
                     }
                 }
             }
