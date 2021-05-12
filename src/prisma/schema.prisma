@@ -17,7 +17,16 @@ generator typegraphql {
 
 model User {
   id        String    @id @default(uuid())
-  updatedAt DateTime  @default(now()) @updatedAt
+  // Proposed feature to be released soon.
+  // The triple slash below is needed
+  // as it's not a regular comment.
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime  @updatedAt
+  // Proposed feature to be released soon.
+  // The triple slash below is needed
+  // as it's not a regular comment.
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime  @default(now())
   email     String    @unique
   firstName String    @db.VarChar(255)
   lastName  String    @db.VarChar(255)
@@ -28,7 +37,16 @@ model User {
 
 model Post {
   id        String    @id @default(uuid())
-  updatedAt DateTime  @default(now()) @updatedAt
+  // Proposed feature to be released soon.
+  // The triple slash below is needed
+  // as it's not a regular comment.
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime  @updatedAt
+  // Proposed feature to be released soon.
+  // The triple slash below is needed
+  // as it's not a regular comment.
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime  @default(now())
   author    User      @relation(fields: [authorId], references: [id])
   authorId  String
   title     String    @db.VarChar(255)
@@ -39,9 +57,17 @@ model Post {
 
 model Comment {
   id        String   @id @default(uuid())
-  updatedAt DateTime @default(now()) @updatedAt
+  // Proposed feature to be released soon.
+  // The triple slash below is needed
+  // as it's not a regular comment.
+  /// @TypeGraphQL.omit(input: true)
+  updatedAt DateTime @updatedAt
+  // Proposed feature to be released soon.
+  // The triple slash below is needed
+  // as it's not a regular comment.
+  /// @TypeGraphQL.omit(input: true)
+  createdAt DateTime @default(now())
   author    User     @relation(fields: [userId], references: [id])
-  date      DateTime
   post      Post     @relation(fields: [postId], references: [id])
   text      String   @db.VarChar(255)
   userId    String

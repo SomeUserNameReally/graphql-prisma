@@ -1,3 +1,6 @@
+// This file is for demonstration purposes only
+// and as such is not completely written.
+
 import { NonEmptyArray } from "type-graphql";
 import {
     UserCrudResolver,

@@ -3,7 +3,9 @@ import "class-validator";
 
 import { ApolloServer } from "apollo-server";
 import { buildSchema } from "type-graphql";
-import resolvers from "./resolvers";
+// For finer control, you can do
+// import resolvers from "./resolvers";
+import { resolvers } from "./prisma/generated/type-graphql";
 import { PrismaClient } from "@prisma/client";
 
 export class Server {
