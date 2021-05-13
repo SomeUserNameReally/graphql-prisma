@@ -3,10 +3,13 @@ import "class-validator";
 
 import { ApolloServer } from "apollo-server";
 import { buildSchema } from "type-graphql";
-// For finer control, you can do
-// import resolvers from "./resolvers";
-import { resolvers } from "./prisma/generated/type-graphql";
+// For finer control, but still unauthenticated.
+// you can do
+// import resolvers from "./resolversCherryPick";
+// Default way of importing all generated resolvers
+// import { resolvers } from "./prisma/generated/type-graphql";
 import { PrismaClient } from "./prisma/client";
+import { resolvers } from "./resolvers";
 
 export class Server {
     private static server: ApolloServer;
