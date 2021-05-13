@@ -8,8 +8,24 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 """
 scalar DateTime
 
+type Post {
+  """@onDelete(SET_NULL)"""
+  authorId: String!
+  body: String!
+  createdAt: DateTime!
+  id: String!
+  published: Boolean!
+  title: String!
+  updatedAt: DateTime!
+}
+
+input PostWhereUniqueInput {
+  id: String
+}
+
 type Query {
-  user(where: UserWhereUniqueInput!): User
+  post(where: PostWhereUniqueInput!): Post
+  users(query: String): [User!]!
 }
 
 type User {
@@ -20,9 +36,4 @@ type User {
   id: String!
   lastName: String!
   updatedAt: DateTime!
-}
-
-input UserWhereUniqueInput {
-  email: String
-  id: String
 }
