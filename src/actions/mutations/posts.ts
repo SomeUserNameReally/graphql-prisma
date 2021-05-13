@@ -55,4 +55,37 @@ export class PostActions implements GraphPostActions {
 
         return post.author;
     }
+
+    async update(postID: string, data: Partial<PostCreateInput>) {
+        const { title } = data;
+        if (title !== undefined && title.trim().length === 0)
+            throw new Error("Cannot provide an empty title string!");
+
+        const post = await prisma.post.findUnique({ where: { id: postID } });
+        if (!post) throw new Error("No such post!");
+
+        const updatedPost = await prisma.post.update({
+            where: {
+                id: postID
+            },
+            data,
+            select: {
+                author: {
+                    select: {
+                        id: true,
+                        email: true,
+                        posts: {
+                            select: {
+                                id: true,
+                                title: true,
+                                published: true
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        return updatedPost.author;
+    }
 }

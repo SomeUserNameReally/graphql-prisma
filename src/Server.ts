@@ -7,6 +7,7 @@ import { buildSchema } from "type-graphql";
 // import resolvers from "./resolvers";
 import { resolvers } from "./prisma/generated/type-graphql";
 import { prisma } from "./prisma/client";
+import { PostActions } from "./actions/mutations/posts";
 
 export class Server {
     private static server: ApolloServer;
@@ -28,6 +29,18 @@ export class Server {
                 prisma
             }
         });
+
+        const postActions = new PostActions();
+
+        try {
+            console.log(
+                await postActions.update("1233", {
+                    published: true
+                })
+            );
+        } catch (err) {
+            console.log(err.message);
+        }
 
         // Start the server
         const { url } = await Server.server.listen(4200);
