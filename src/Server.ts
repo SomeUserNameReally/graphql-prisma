@@ -6,15 +6,13 @@ import { buildSchema } from "type-graphql";
 // For finer control, you can do
 // import resolvers from "./resolvers";
 import { resolvers } from "./prisma/generated/type-graphql";
-import { PrismaClient } from "@prisma/client";
+import { prisma } from "./prisma/client";
 
 export class Server {
     private static server: ApolloServer;
 
     static async init(): Promise<void> {
         if (Server.server) return;
-
-        const prisma = new PrismaClient();
 
         // ... Building schema here
         const schema = await buildSchema({
