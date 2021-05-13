@@ -24,7 +24,7 @@ export class PostActions implements GraphPostActions {
         });
         if (!user) throw new Error("User not found!");
 
-        return PostActions._create(authorID, data);
+        return await PostActions._create(authorID, data);
     }
 
     async update(postID: string, data: Partial<PostCreateInput>) {
@@ -38,7 +38,7 @@ export class PostActions implements GraphPostActions {
         });
         if (!post) throw new Error("No such post!");
 
-        return PostActions._update(postID, data);
+        return await PostActions._update(postID, data);
     }
 
     private static async _create(
