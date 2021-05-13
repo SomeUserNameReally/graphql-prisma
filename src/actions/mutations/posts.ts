@@ -1,9 +1,9 @@
-import { prisma } from "../../prisma/client";
+import { PrismaClient } from "../../prisma/client";
 import { PostCreateInput } from "../../prisma/generated/type-graphql";
 import { GraphPostActions } from "../../typings/actions";
 
 export class PostActions implements GraphPostActions {
-    static readonly POST_ACTIONS = new PostActions();
+    private static readonly POST_ACTIONS = new PostActions();
 
     constructor() {
         return PostActions.POST_ACTIONS;
@@ -18,7 +18,10 @@ export class PostActions implements GraphPostActions {
         const { title, body: postBody } = data;
         if (!title) throw new Error("You must provide a title for a new post!");
 
-        const user = await prisma.user.findUnique({ where: { id: authorID } });
+        const { client: prisma } = PrismaClient;
+        const user = await prisma.user.findUnique({
+            where: { id: authorID }
+        });
         if (!user) throw new Error("User not found!");
 
         const body = postBody || "";
@@ -61,7 +64,10 @@ export class PostActions implements GraphPostActions {
         if (title !== undefined && title.trim().length === 0)
             throw new Error("Cannot provide an empty title string!");
 
-        const post = await prisma.post.findUnique({ where: { id: postID } });
+        const { client: prisma } = PrismaClient;
+        const post = await prisma.post.findUnique({
+            where: { id: postID }
+        });
         if (!post) throw new Error("No such post!");
 
         const updatedPost = await prisma.post.update({

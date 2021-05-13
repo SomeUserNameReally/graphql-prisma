@@ -49,9 +49,13 @@ type Comment {
   createdAt: DateTime!
   id: String!
   post: Post!
+
+  """@onDelete(SET_NULL)"""
   postId: String!
   text: String!
   updatedAt: DateTime!
+
+  """@onDelete(SET_NULL)"""
   userId: String!
 }
 
@@ -549,9 +553,14 @@ input NullableIntFieldUpdateOperationsInput {
 }
 
 type Post {
+  """@onDelete(SET_NULL)"""
   author: User!
+
+  """@onDelete(SET_NULL)"""
   authorId: String!
   body: String!
+
+  """@onDelete(CASCADE)"""
   comments(cursor: CommentWhereUniqueInput, distinct: [CommentScalarFieldEnum!], orderBy: [CommentOrderByInput!], skip: Int, take: Int, where: CommentWhereInput): [Comment!]!
   createdAt: DateTime!
   id: String!
@@ -908,12 +917,16 @@ input StringWithAggregatesFilter {
 
 type User {
   age: Int
+
+  """@onDelete(CASCADE)"""
   comments(cursor: CommentWhereUniqueInput, distinct: [CommentScalarFieldEnum!], orderBy: [CommentOrderByInput!], skip: Int, take: Int, where: CommentWhereInput): [Comment!]!
   createdAt: DateTime!
   email: String!
   firstName: String!
   id: String!
   lastName: String!
+
+  """@onDelete(CASCADE)"""
   posts(cursor: PostWhereUniqueInput, distinct: [PostScalarFieldEnum!], orderBy: [PostOrderByInput!], skip: Int, take: Int, where: PostWhereInput): [Post!]!
   updatedAt: DateTime!
 }

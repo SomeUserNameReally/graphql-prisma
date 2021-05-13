@@ -31,7 +31,15 @@ model User {
   firstName String    @db.VarChar(255)
   lastName  String    @db.VarChar(255)
   age       Int?      @db.Integer
+  // Feature is replacement for native
+  // feature in the works to be released
+  // soon.
+  /// @onDelete(CASCADE)
   posts     Post[]
+  // Feature is replacement for native
+  // feature in the works to be released
+  // soon.
+  /// @onDelete(CASCADE)
   comments  Comment[]
 }
 
@@ -47,11 +55,23 @@ model Post {
   // as it's not a regular comment.
   /// @TypeGraphQL.omit(input: true)
   createdAt DateTime  @default(now())
+  // Feature is replacement for native
+  // feature in the works to be released
+  // soon.
+  /// @onDelete(SET_NULL)
   author    User      @relation(fields: [authorId], references: [id])
+  // Feature is replacement for native
+  // feature in the works to be released
+  // soon.
+  /// @onDelete(SET_NULL)
   authorId  String
   title     String    @db.VarChar(255)
   body      String
   published Boolean   @default(true)
+  // Feature is replacement for native
+  // feature in the works to be released
+  // soon.
+  /// @onDelete(CASCADE)
   comments  Comment[]
 }
 
@@ -70,6 +90,14 @@ model Comment {
   author    User     @relation(fields: [userId], references: [id])
   post      Post     @relation(fields: [postId], references: [id])
   text      String   @db.VarChar(255)
+  // Feature is replacement for native
+  // feature in the works to be released
+  // soon.
+  /// @onDelete(SET_NULL)
   userId    String
+  // Feature is replacement for native
+  // feature in the works to be released
+  // soon.
+  /// @onDelete(SET_NULL)
   postId    String
 }
