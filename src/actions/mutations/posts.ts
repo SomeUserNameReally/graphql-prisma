@@ -12,13 +12,13 @@ export class PostActions implements GraphPostActions {
     async create(authorID: string, data: Partial<PostCreateInput>) {
         await PostActions._verifyCreateArgs(authorID, data);
 
-        return await PostActions._create(authorID, data);
+        return PostActions._create(authorID, data);
     }
 
     async update(postID: string, data: Partial<PostCreateInput>) {
         await PostActions._verifyUpdateArgs(postID, data);
 
-        return await PostActions._update(postID, data);
+        return PostActions._update(postID, data);
     }
 
     private static async _verifyCreateArgs(
