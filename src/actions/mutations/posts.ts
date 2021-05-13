@@ -1,5 +1,5 @@
 import { PrismaClient } from "../../prisma/client";
-import { PostCreateInput } from "../../prisma/generated/type-graphql";
+import { Post, PostCreateInput } from "../../prisma/generated/type-graphql";
 import { GraphPostActions } from "../../typings/actions";
 
 export class PostActions implements GraphPostActions {
@@ -15,7 +15,7 @@ export class PostActions implements GraphPostActions {
                 "The author provided as part of the data payload will not be used!"
             );
 
-        const { title, body: postBody } = data;
+        const { title } = data;
         if (!title) throw new Error("You must provide a title for a new post!");
 
         const { client: prisma } = PrismaClient;
@@ -24,11 +24,33 @@ export class PostActions implements GraphPostActions {
         });
         if (!user) throw new Error("User not found!");
 
-        const body = postBody || "";
+        return PostActions._create(authorID, data);
+    }
+
+    async update(postID: string, data: Partial<PostCreateInput>) {
+        const { title } = data;
+        if (title !== undefined && title.trim().length === 0)
+            throw new Error("Cannot provide an empty title string!");
+
+        const { client: prisma } = PrismaClient;
+        const post = await prisma.post.findUnique({
+            where: { id: postID }
+        });
+        if (!post) throw new Error("No such post!");
+
+        return PostActions._update(postID, data);
+    }
+
+    private static async _create(
+        authorID: string,
+        data: Partial<PostCreateInput>
+    ) {
+        const { client: prisma } = PrismaClient;
+        const body = data.body?.trim() || "";
 
         const post = await prisma.post.create({
             data: {
-                title,
+                title: data.title!,
                 body,
                 ...data,
                 author: {
@@ -59,16 +81,11 @@ export class PostActions implements GraphPostActions {
         return post.author;
     }
 
-    async update(postID: string, data: Partial<PostCreateInput>) {
-        const { title } = data;
-        if (title !== undefined && title.trim().length === 0)
-            throw new Error("Cannot provide an empty title string!");
-
+    private static async _update(
+        postID: string,
+        data: Partial<PostCreateInput>
+    ) {
         const { client: prisma } = PrismaClient;
-        const post = await prisma.post.findUnique({
-            where: { id: postID }
-        });
-        if (!post) throw new Error("No such post!");
 
         const updatedPost = await prisma.post.update({
             where: {
