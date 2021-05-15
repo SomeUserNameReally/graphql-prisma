@@ -95,6 +95,7 @@ scalar DateTime
 
 type Mutation {
   createUser(data: UserCreateInput!): User!
+  deleteUser(where: UserWhereUniqueInput!): User
 }
 
 type Post {

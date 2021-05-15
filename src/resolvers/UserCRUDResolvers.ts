@@ -11,6 +11,7 @@ import {
 } from "type-graphql";
 import {
     CreateUserArgs,
+    DeleteUserArgs,
     Post,
     User,
     UserCrudResolver
@@ -89,5 +90,26 @@ export class UserCRUDResolvers {
         if (emailTaken) throw new Error("Email taken!");
 
         return UserCRUDResolvers.CRUD_RESOLVER.createUser(context, info, args);
+    }
+
+    @Mutation((_returns) => User, {
+        nullable: true
+    })
+    async deleteUser(
+        @Ctx() context: GraphQLContext,
+        @Info() info: GraphQLResolveInfo,
+        @Args() args: DeleteUserArgs
+    ) {
+        if (!args.where.id) throw new Error("Please provide a valid user ID!");
+
+        const emailExists = await context.prisma.user.findUnique({
+            where: {
+                id: args.where.id
+            }
+        });
+
+        if (!emailExists) throw new Error("No such user!");
+
+        return UserCRUDResolvers.CRUD_RESOLVER.deleteUser(context, info, args);
     }
 }
