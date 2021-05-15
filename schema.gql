@@ -4,6 +4,7 @@
 # -----------------------------------------------
 
 type Comment {
+  author: User!
   createdAt: DateTime!
   id: String!
   post: Post!

@@ -11,7 +11,8 @@ import {
 import {
     Comment,
     CommentCrudResolver,
-    Post
+    Post,
+    User
 } from "../prisma/generated/type-graphql";
 import { FindManyCommentArgs } from "../types/args/CommentCRUDArgs";
 import { GraphQLContext } from "../typings/global";
@@ -48,6 +49,15 @@ export class CommentCRUDResolvers {
         return await context.prisma.post.findUnique({
             where: {
                 id: parent.postId
+            }
+        });
+    }
+
+    @FieldResolver(() => User)
+    async author(@Ctx() context: GraphQLContext, @Root() parent: Comment) {
+        return await context.prisma.user.findUnique({
+            where: {
+                id: parent.userId
             }
         });
     }
