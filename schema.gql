@@ -6,6 +6,7 @@
 type Comment {
   createdAt: DateTime!
   id: String!
+  post: Post!
 
   """@onDelete(SET_NULL)"""
   postId: String!

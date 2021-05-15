@@ -1,6 +1,18 @@
 import { GraphQLResolveInfo } from "graphql";
-import { Args, Ctx, Info, Query, Resolver } from "type-graphql";
-import { Comment, CommentCrudResolver } from "../prisma/generated/type-graphql";
+import {
+    Args,
+    Ctx,
+    FieldResolver,
+    Info,
+    Query,
+    Resolver,
+    Root
+} from "type-graphql";
+import {
+    Comment,
+    CommentCrudResolver,
+    Post
+} from "../prisma/generated/type-graphql";
 import { FindManyCommentArgs } from "../types/args/CommentCRUDArgs";
 import { GraphQLContext } from "../typings/global";
 
@@ -29,5 +41,14 @@ export class CommentCRUDResolvers {
                   }
                 : {}
         );
+    }
+
+    @FieldResolver(() => Post)
+    async post(@Ctx() context: GraphQLContext, @Root() parent: Comment) {
+        return await context.prisma.post.findUnique({
+            where: {
+                id: parent.postId
+            }
+        });
     }
 }
