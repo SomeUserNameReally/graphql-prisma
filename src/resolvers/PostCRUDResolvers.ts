@@ -8,8 +8,8 @@ import { GraphQLContext } from "../typings/global";
 export class PostCRUDResolvers {
     private static readonly CRUD_RESOLVER = new PostCrudResolver();
 
-    @Query((_returns) => [Post]!, {
-        nullable: true
+    @Query((_returns) => [Post], {
+        nullable: "items"
     })
     async posts(
         @Ctx() context: GraphQLContext,

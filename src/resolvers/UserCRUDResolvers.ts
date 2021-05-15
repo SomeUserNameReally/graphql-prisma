@@ -16,7 +16,9 @@ import { GraphQLContext } from "../typings/global";
 export class UserCRUDResolvers {
     private static readonly CRUD_RESOLVER = new UserCrudResolver();
 
-    @Query((_returns) => [User]!)
+    @Query((_returns) => [User], {
+        nullable: "items"
+    })
     async users(
         @Ctx() context: GraphQLContext,
         @Info() info: GraphQLResolveInfo,
@@ -55,8 +57,8 @@ export class UserCRUDResolvers {
         );
     }
 
-    @FieldResolver(() => [Post]!, {
-        nullable: true
+    @FieldResolver(() => [Post], {
+        nullable: "items"
     })
     async posts(@Ctx() context: GraphQLContext, @Root() parent: User) {
         return await context.prisma.post.findMany({

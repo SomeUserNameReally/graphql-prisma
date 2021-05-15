@@ -20,8 +20,8 @@ type Post {
 }
 
 type Query {
-  posts(query: String): [Post!]
-  users(query: String): [User!]!
+  posts(query: String): [Post]!
+  users(query: String): [User]!
 }
 
 type User {
@@ -31,6 +31,6 @@ type User {
   firstName: String!
   id: String!
   lastName: String!
-  posts: [Post!]
+  posts: [Post]!
   updatedAt: DateTime!
 }
