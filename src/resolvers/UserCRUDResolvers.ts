@@ -1,6 +1,14 @@
 import { GraphQLResolveInfo } from "graphql";
-import { Args, Ctx, Info, Query, Resolver } from "type-graphql";
-import { User, UserCrudResolver } from "../prisma/generated/type-graphql";
+import {
+    Args,
+    Ctx,
+    FieldResolver,
+    Info,
+    Query,
+    Resolver,
+    Root
+} from "type-graphql";
+import { Post, User, UserCrudResolver } from "../prisma/generated/type-graphql";
 import { FindManyUserArgs } from "../types/args/UserCRUDArgs";
 import { GraphQLContext } from "../typings/global";
 
@@ -14,29 +22,46 @@ export class UserCRUDResolvers {
         @Info() info: GraphQLResolveInfo,
         @Args() args: FindManyUserArgs
     ) {
-        return UserCRUDResolvers.CRUD_RESOLVER.users(context, info, {
+        return UserCRUDResolvers.CRUD_RESOLVER.users(
+            context,
+            info,
+            args.query
+                ? {
+                      where: {
+                          OR: [
+                              {
+                                  OR: [
+                                      {
+                                          firstName: {
+                                              contains: args.query
+                                          }
+                                      },
+                                      {
+                                          lastName: {
+                                              contains: args.query
+                                          }
+                                      }
+                                  ]
+                              },
+                              {
+                                  email: {
+                                      contains: args.query
+                                  }
+                              }
+                          ]
+                      }
+                  }
+                : {}
+        );
+    }
+
+    @FieldResolver(() => [Post]!, {
+        nullable: true
+    })
+    async posts(@Ctx() context: GraphQLContext, @Root() parent: User) {
+        return await context.prisma.post.findMany({
             where: {
-                OR: [
-                    {
-                        OR: [
-                            {
-                                firstName: {
-                                    contains: args.query
-                                }
-                            },
-                            {
-                                lastName: {
-                                    contains: args.query
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        email: {
-                            contains: args.query
-                        }
-                    }
-                ]
+                authorId: parent.id
             }
         });
     }

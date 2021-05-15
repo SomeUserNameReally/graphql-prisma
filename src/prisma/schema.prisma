@@ -16,6 +16,10 @@ generator typegraphql {
 }
 
 model User {
+  // Proposed feature to be released soon.
+  // The triple slash below is needed
+  // as it's not a regular comment.
+  /// @TypeGraphQL.omit(input: true)
   id        String    @id @default(uuid())
   // Proposed feature to be released soon.
   // The triple slash below is needed
@@ -44,6 +48,10 @@ model User {
 }
 
 model Post {
+  // Proposed feature to be released soon.
+  // The triple slash below is needed
+  // as it's not a regular comment.
+  /// @TypeGraphQL.omit(input: true)
   id        String    @id @default(uuid())
   // Proposed feature to be released soon.
   // The triple slash below is needed
@@ -76,6 +84,10 @@ model Post {
 }
 
 model Comment {
+  // Proposed feature to be released soon.
+  // The triple slash below is needed
+  // as it's not a regular comment.
+  /// @TypeGraphQL.omit(input: true)
   id        String   @id @default(uuid())
   // Proposed feature to be released soon.
   // The triple slash below is needed

@@ -19,12 +19,8 @@ type Post {
   updatedAt: DateTime!
 }
 
-input PostWhereUniqueInput {
-  id: String
-}
-
 type Query {
-  post(where: PostWhereUniqueInput!): Post
+  posts(query: String): [Post!]
   users(query: String): [User!]!
 }
 
@@ -35,5 +31,6 @@ type User {
   firstName: String!
   id: String!
   lastName: String!
+  posts: [Post!]
   updatedAt: DateTime!
 }
