@@ -12,11 +12,11 @@ import { Post, User, UserCrudResolver } from "../prisma/generated/type-graphql";
 import { FindManyUserArgs } from "../types/args/UserCRUDArgs";
 import { GraphQLContext } from "../typings/global";
 
-@Resolver(() => User)
+@Resolver((_of) => User)
 export class UserCRUDResolvers {
     private static readonly CRUD_RESOLVER = new UserCrudResolver();
 
-    @Query((_returns) => [User], {
+    @Query((_type) => [User], {
         nullable: "items"
     })
     async users(
@@ -57,7 +57,7 @@ export class UserCRUDResolvers {
         );
     }
 
-    @FieldResolver(() => [Post], {
+    @FieldResolver((_type) => [Post], {
         nullable: "items"
     })
     async posts(@Ctx() context: GraphQLContext, @Root() parent: User) {

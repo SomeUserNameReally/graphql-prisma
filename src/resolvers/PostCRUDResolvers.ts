@@ -4,11 +4,11 @@ import { Post, PostCrudResolver } from "../prisma/generated/type-graphql";
 import { FindManyPostArgs } from "../types/args/PostCRUDArgs";
 import { GraphQLContext } from "../typings/global";
 
-@Resolver(() => Post)
+@Resolver((_of) => Post)
 export class PostCRUDResolvers {
     private static readonly CRUD_RESOLVER = new PostCrudResolver();
 
-    @Query((_returns) => [Post], {
+    @Query((_type) => [Post], {
         nullable: "items"
     })
     async posts(
