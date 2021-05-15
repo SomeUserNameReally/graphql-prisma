@@ -8,7 +8,7 @@ import { GraphQLContext } from "../typings/global";
 export class PostCRUDResolvers {
     private static readonly CRUD_RESOLVER = new PostCrudResolver();
 
-    @Query((_type) => [Post], {
+    @Query((_returns) => [Post], {
         nullable: "items"
     })
     async posts(

@@ -21,7 +21,7 @@ import { GraphQLContext } from "../typings/global";
 export class CommentCRUDResolvers {
     private static readonly CRUD_RESOLVER = new CommentCrudResolver();
 
-    @Query((_type) => [Comment], {
+    @Query((_returns) => [Comment], {
         nullable: "items"
     })
     async comments(
@@ -44,7 +44,7 @@ export class CommentCRUDResolvers {
         );
     }
 
-    @FieldResolver((_type) => Post)
+    @FieldResolver((_returns) => Post)
     async post(@Ctx() context: GraphQLContext, @Root() parent: Comment) {
         return await context.prisma.post.findUnique({
             where: {
@@ -53,7 +53,7 @@ export class CommentCRUDResolvers {
         });
     }
 
-    @FieldResolver((_type) => User)
+    @FieldResolver((_returns) => User)
     async author(@Ctx() context: GraphQLContext, @Root() parent: Comment) {
         return await context.prisma.user.findUnique({
             where: {
