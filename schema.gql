@@ -3,6 +3,19 @@
 # !!!   DO NOT MODIFY THIS FILE BY YOURSELF   !!!
 # -----------------------------------------------
 
+type Comment {
+  createdAt: DateTime!
+  id: String!
+
+  """@onDelete(SET_NULL)"""
+  postId: String!
+  text: String!
+  updatedAt: DateTime!
+
+  """@onDelete(SET_NULL)"""
+  userId: String!
+}
+
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
@@ -20,6 +33,7 @@ type Post {
 }
 
 type Query {
+  comments(query: String): [Comment]!
   posts(query: String): [Post]!
   users(query: String): [User]!
 }
