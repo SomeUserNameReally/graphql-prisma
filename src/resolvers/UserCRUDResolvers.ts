@@ -4,11 +4,17 @@ import {
     Ctx,
     FieldResolver,
     Info,
+    Mutation,
     Query,
     Resolver,
     Root
 } from "type-graphql";
-import { Post, User, UserCrudResolver } from "../prisma/generated/type-graphql";
+import {
+    CreateUserArgs,
+    Post,
+    User,
+    UserCrudResolver
+} from "../prisma/generated/type-graphql";
 import { FindManyUserArgs } from "../types/args/UserCRUDArgs";
 import { GraphQLContext } from "../typings/global";
 
@@ -66,5 +72,22 @@ export class UserCRUDResolvers {
                 authorId: parent.id
             }
         });
+    }
+
+    @Mutation((_returns) => User)
+    async createUser(
+        @Ctx() context: GraphQLContext,
+        @Info() info: GraphQLResolveInfo,
+        @Args() args: CreateUserArgs
+    ) {
+        const emailTaken = await context.prisma.user.findUnique({
+            where: {
+                email: args.data.email
+            }
+        });
+
+        if (emailTaken) throw new Error("Email taken!");
+
+        return UserCRUDResolvers.CRUD_RESOLVER.createUser(context, info, args);
     }
 }

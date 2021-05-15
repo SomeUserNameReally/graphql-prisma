@@ -18,10 +18,84 @@ type Comment {
   userId: String!
 }
 
+input CommentCreateManyAuthorInput {
+  createdAt: DateTime
+  id: String
+  postId: String!
+  text: String!
+  updatedAt: DateTime
+}
+
+input CommentCreateManyAuthorInputEnvelope {
+  data: [CommentCreateManyAuthorInput!]!
+  skipDuplicates: Boolean
+}
+
+input CommentCreateManyPostInput {
+  createdAt: DateTime
+  id: String
+  text: String!
+  updatedAt: DateTime
+  userId: String!
+}
+
+input CommentCreateManyPostInputEnvelope {
+  data: [CommentCreateManyPostInput!]!
+  skipDuplicates: Boolean
+}
+
+input CommentCreateNestedManyWithoutAuthorInput {
+  connect: [CommentWhereUniqueInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutAuthorInput!]
+  create: [CommentCreateWithoutAuthorInput!]
+  createMany: CommentCreateManyAuthorInputEnvelope
+}
+
+input CommentCreateNestedManyWithoutPostInput {
+  connect: [CommentWhereUniqueInput!]
+  connectOrCreate: [CommentCreateOrConnectWithoutPostInput!]
+  create: [CommentCreateWithoutPostInput!]
+  createMany: CommentCreateManyPostInputEnvelope
+}
+
+input CommentCreateOrConnectWithoutAuthorInput {
+  create: CommentCreateWithoutAuthorInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentCreateOrConnectWithoutPostInput {
+  create: CommentCreateWithoutPostInput!
+  where: CommentWhereUniqueInput!
+}
+
+input CommentCreateWithoutAuthorInput {
+  createdAt: DateTime
+  id: String
+  post: PostCreateNestedOneWithoutCommentsInput!
+  text: String!
+  updatedAt: DateTime
+}
+
+input CommentCreateWithoutPostInput {
+  author: UserCreateNestedOneWithoutCommentsInput!
+  createdAt: DateTime
+  id: String
+  text: String!
+  updatedAt: DateTime
+}
+
+input CommentWhereUniqueInput {
+  id: String
+}
+
 """
 The javascript `Date` as string. Type represents date and time as the ISO Date string.
 """
 scalar DateTime
+
+type Mutation {
+  createUser(data: UserCreateInput!): User!
+}
 
 type Post {
   """@onDelete(SET_NULL)"""
@@ -32,6 +106,67 @@ type Post {
   published: Boolean!
   title: String!
   updatedAt: DateTime!
+}
+
+input PostCreateManyAuthorInput {
+  body: String!
+  createdAt: DateTime
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+}
+
+input PostCreateManyAuthorInputEnvelope {
+  data: [PostCreateManyAuthorInput!]!
+  skipDuplicates: Boolean
+}
+
+input PostCreateNestedManyWithoutAuthorInput {
+  connect: [PostWhereUniqueInput!]
+  connectOrCreate: [PostCreateOrConnectWithoutAuthorInput!]
+  create: [PostCreateWithoutAuthorInput!]
+  createMany: PostCreateManyAuthorInputEnvelope
+}
+
+input PostCreateNestedOneWithoutCommentsInput {
+  connect: PostWhereUniqueInput
+  connectOrCreate: PostCreateOrConnectWithoutCommentsInput
+  create: PostCreateWithoutCommentsInput
+}
+
+input PostCreateOrConnectWithoutAuthorInput {
+  create: PostCreateWithoutAuthorInput!
+  where: PostWhereUniqueInput!
+}
+
+input PostCreateOrConnectWithoutCommentsInput {
+  create: PostCreateWithoutCommentsInput!
+  where: PostWhereUniqueInput!
+}
+
+input PostCreateWithoutAuthorInput {
+  body: String!
+  comments: CommentCreateNestedManyWithoutPostInput
+  createdAt: DateTime
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+}
+
+input PostCreateWithoutCommentsInput {
+  author: UserCreateNestedOneWithoutPostsInput!
+  body: String!
+  createdAt: DateTime
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
+}
+
+input PostWhereUniqueInput {
+  id: String
 }
 
 type Query {
@@ -49,4 +184,65 @@ type User {
   lastName: String!
   posts: [Post]!
   updatedAt: DateTime!
+}
+
+input UserCreateInput {
+  age: Int
+  comments: CommentCreateNestedManyWithoutAuthorInput
+  createdAt: DateTime
+  email: String!
+  firstName: String!
+  id: String
+  lastName: String!
+  posts: PostCreateNestedManyWithoutAuthorInput
+  updatedAt: DateTime
+}
+
+input UserCreateNestedOneWithoutCommentsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutCommentsInput
+  create: UserCreateWithoutCommentsInput
+}
+
+input UserCreateNestedOneWithoutPostsInput {
+  connect: UserWhereUniqueInput
+  connectOrCreate: UserCreateOrConnectWithoutPostsInput
+  create: UserCreateWithoutPostsInput
+}
+
+input UserCreateOrConnectWithoutCommentsInput {
+  create: UserCreateWithoutCommentsInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateOrConnectWithoutPostsInput {
+  create: UserCreateWithoutPostsInput!
+  where: UserWhereUniqueInput!
+}
+
+input UserCreateWithoutCommentsInput {
+  age: Int
+  createdAt: DateTime
+  email: String!
+  firstName: String!
+  id: String
+  lastName: String!
+  posts: PostCreateNestedManyWithoutAuthorInput
+  updatedAt: DateTime
+}
+
+input UserCreateWithoutPostsInput {
+  age: Int
+  comments: CommentCreateNestedManyWithoutAuthorInput
+  createdAt: DateTime
+  email: String!
+  firstName: String!
+  id: String
+  lastName: String!
+  updatedAt: DateTime
+}
+
+input UserWhereUniqueInput {
+  email: String
+  id: String
 }
