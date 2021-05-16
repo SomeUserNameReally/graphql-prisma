@@ -10,6 +10,7 @@ import { buildSchema } from "type-graphql";
 // import { resolvers } from "./prisma/generated/type-graphql";
 import { PrismaClient } from "./prisma/client";
 import { resolvers } from "./resolvers";
+import PubSubImplementation from "./PubSub";
 
 export class Server {
     private static server: ApolloServer;
@@ -17,10 +18,12 @@ export class Server {
     static async init(): Promise<void> {
         if (Server.server) return;
 
+        const pubSub = new PubSubImplementation();
         // ... Building schema here
         const schema = await buildSchema({
             resolvers,
-            emitSchemaFile: true
+            emitSchemaFile: true,
+            pubSub
         });
 
         // Create the GraphQL server
