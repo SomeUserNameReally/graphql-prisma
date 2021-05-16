@@ -73,15 +73,12 @@ export class PostCRUDResolvers {
             args
         );
 
-        if (post.published) {
-            pubsub.publish<
-                StaticSubscriptionChannelNames.POST,
-                PostSubscriptionPayload
-            >(StaticSubscriptionChannelNames.POST, {
-                data: post,
-                mutation: SubscriptionMutationPayload.CREATED
-            });
-        }
+        if (post.published)
+            PostCRUDResolvers.publishPostChange(
+                post,
+                SubscriptionMutationPayload.CREATED,
+                pubsub
+            );
 
         return post;
     }
@@ -102,5 +99,19 @@ export class PostCRUDResolvers {
         @Args() args: UpdatePostArgs
     ) {
         return PostCRUDResolvers.CRUD_RESOLVER.updatePost(context, info, args);
+    }
+
+    private static async publishPostChange(
+        data: Post,
+        mutation: SubscriptionMutationPayload,
+        pubsubEngine: PubSubImplementation
+    ) {
+        return pubsubEngine.publish<
+            StaticSubscriptionChannelNames.POST,
+            PostSubscriptionPayload
+        >(StaticSubscriptionChannelNames.POST, {
+            data,
+            mutation
+        });
     }
 }
