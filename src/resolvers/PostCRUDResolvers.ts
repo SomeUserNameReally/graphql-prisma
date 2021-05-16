@@ -2,6 +2,7 @@ import { GraphQLResolveInfo } from "graphql";
 import { Args, Ctx, Info, Mutation, Query, Resolver } from "type-graphql";
 import {
     CreatePostArgs,
+    DeletePostArgs,
     Post,
     PostCrudResolver
 } from "../prisma/generated/type-graphql";
@@ -51,5 +52,14 @@ export class PostCRUDResolvers {
         @Args() args: CreatePostArgs
     ) {
         return PostCRUDResolvers.CRUD_RESOLVER.createPost(context, info, args);
+    }
+
+    @Mutation((_returns) => Post)
+    async deletePost(
+        @Ctx() context: GraphQLContext,
+        @Info() info: GraphQLResolveInfo,
+        @Args() args: DeletePostArgs
+    ) {
+        return PostCRUDResolvers.CRUD_RESOLVER.deletePost(context, info, args);
     }
 }
