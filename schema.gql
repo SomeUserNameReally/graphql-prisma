@@ -213,6 +213,7 @@ input DateTimeFilter {
 }
 
 type Mutation {
+  createPost(data: PostCreateInput!): Post!
   createUser(data: UserCreateInput!): User!
   deleteUser(where: UserWhereUniqueInput!): User
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
@@ -265,6 +266,17 @@ type Post {
   published: Boolean!
   title: String!
   updatedAt: DateTime!
+}
+
+input PostCreateInput {
+  author: UserCreateNestedOneWithoutPostsInput!
+  body: String!
+  comments: CommentCreateNestedManyWithoutPostInput
+  createdAt: DateTime
+  id: String
+  published: Boolean
+  title: String!
+  updatedAt: DateTime
 }
 
 input PostCreateManyAuthorInput {

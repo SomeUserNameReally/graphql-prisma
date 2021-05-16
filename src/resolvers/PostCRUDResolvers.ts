@@ -1,6 +1,10 @@
 import { GraphQLResolveInfo } from "graphql";
-import { Args, Ctx, Info, Query, Resolver } from "type-graphql";
-import { Post, PostCrudResolver } from "../prisma/generated/type-graphql";
+import { Args, Ctx, Info, Mutation, Query, Resolver } from "type-graphql";
+import {
+    CreatePostArgs,
+    Post,
+    PostCrudResolver
+} from "../prisma/generated/type-graphql";
 import { FindManyPostArgs } from "../types/args/PostCRUDArgs";
 import { GraphQLContext } from "../typings/global";
 
@@ -38,5 +42,14 @@ export class PostCRUDResolvers {
                   }
                 : {}
         );
+    }
+
+    @Mutation((_returns) => Post)
+    async createPost(
+        @Ctx() context: GraphQLContext,
+        @Info() info: GraphQLResolveInfo,
+        @Args() args: CreatePostArgs
+    ) {
+        return PostCRUDResolvers.CRUD_RESOLVER.createPost(context, info, args);
     }
 }
