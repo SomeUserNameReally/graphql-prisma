@@ -1,6 +1,6 @@
-import { PrismaClient } from "../prisma/client";
+import { PrismaClient } from "../../prisma/client";
 import jwt from "jsonwebtoken";
-import { JWT_SIGNING_KEY } from "../config";
+import { JWT_SIGNING_KEY } from "../../config";
 
 export const getUserId = async (authToken?: string) => {
     if (!authToken || typeof authToken !== "string")
@@ -16,7 +16,7 @@ export const getUserId = async (authToken?: string) => {
 
     return await PrismaClient.client.user.findUnique({
         where: {
-            id: (decoded as any).userID + ""
+            id: (decoded as any).id + ""
         },
         select: {
             id: true
