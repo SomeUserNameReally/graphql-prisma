@@ -2,18 +2,21 @@ import { GraphQLResolveInfo } from "graphql";
 import {
     Args,
     Ctx,
+    FieldResolver,
     Info,
     Mutation,
     PubSub,
     Query,
-    Resolver
+    Resolver,
+    Root
 } from "type-graphql";
 import {
     CreatePostArgs,
     DeletePostArgs,
     Post,
     PostCrudResolver,
-    UpdatePostArgs
+    UpdatePostArgs,
+    User
 } from "../prisma/generated/type-graphql";
 import PubSubImplementation from "../PubSub";
 import { FindManyPostArgs } from "../types/args/PostCRUDArgs";
@@ -99,6 +102,15 @@ export class PostCRUDResolvers {
         @Args() args: UpdatePostArgs
     ) {
         return PostCRUDResolvers.CRUD_RESOLVER.updatePost(context, info, args);
+    }
+
+    @FieldResolver((_returns) => User)
+    async author(@Ctx() { prisma }: GraphQLContext, @Root() parent: Post) {
+        return prisma.user.findUnique({
+            where: {
+                id: parent.authorId
+            }
+        });
     }
 
     private static async publishPostChange(
