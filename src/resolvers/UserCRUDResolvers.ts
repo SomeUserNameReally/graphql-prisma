@@ -1,7 +1,6 @@
 import { GraphQLResolveInfo } from "graphql";
 import {
     Args,
-    Authorized,
     Ctx,
     FieldResolver,
     Info,
