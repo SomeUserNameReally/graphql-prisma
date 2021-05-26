@@ -265,6 +265,8 @@ input NullableIntFieldUpdateOperationsInput {
 }
 
 type Post {
+  author: User!
+
   """@onDelete(SET_NULL)"""
   authorId: String!
   body: String!
