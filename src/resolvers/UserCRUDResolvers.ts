@@ -9,6 +9,8 @@ import {
     Resolver,
     Root
 } from "type-graphql";
+import bcrypt from "bcrypt";
+import { sign as jwtSign } from "jsonwebtoken";
 import {
     CreateUserArgs,
     DeleteUserArgs,
@@ -19,6 +21,7 @@ import {
 } from "../prisma/generated/type-graphql";
 import { FindManyUserArgs } from "../types/args/UserCRUDArgs";
 import { GraphQLContext } from "../typings/global";
+import { BCRYPT_HASH, JWT_SIGNING_KEY } from "../config";
 
 @Resolver((_of) => User)
 export class UserCRUDResolvers {
@@ -89,8 +92,30 @@ export class UserCRUDResolvers {
         });
 
         if (emailTaken) throw new Error("Email taken!");
+        if (args.data.password.trim().length < 8)
+            throw new Error("Bad password");
 
-        return UserCRUDResolvers.CRUD_RESOLVER.createUser(context, info, args);
+        if (!BCRYPT_HASH.length || !JWT_SIGNING_KEY.length)
+            throw new Error("Server Error");
+
+        const password = await bcrypt.hash(args.data.password, BCRYPT_HASH);
+
+        const user = await UserCRUDResolvers.CRUD_RESOLVER.createUser(
+            context,
+            info,
+            {
+                ...args,
+                data: {
+                    ...args.data,
+                    password
+                }
+            }
+        );
+
+        return {
+            user,
+            token: jwtSign({ id: user.id }, JWT_SIGNING_KEY)
+        };
     }
 
     @Mutation((_returns) => User, {
