@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo } from "graphql";
 import {
     Args,
+    Authorized,
     Ctx,
     FieldResolver,
     Info,
@@ -9,8 +10,9 @@ import {
     Resolver,
     Root
 } from "type-graphql";
-import bcrypt from "bcrypt";
+import { hash as bcryptHash, compare as bcryptCompare } from "bcrypt";
 import { sign as jwtSign } from "jsonwebtoken";
+import ms from "ms";
 import {
     CreateUserArgs,
     DeleteUserArgs,
@@ -21,7 +23,9 @@ import {
 } from "../prisma/generated/type-graphql";
 import { FindManyUserArgs } from "../types/args/UserCRUDArgs";
 import { GraphQLContext } from "../typings/global";
-import { BCRYPT_HASH, JWT_SIGNING_KEY } from "../config";
+import { BCRYPT_SALT_ROUNDS, JWT_SIGNING_KEY } from "../config";
+import { LoginArgs } from "../types/args/LoginArgs";
+import { LoginResponse } from "../types/object/LoginResponse";
 
 @Resolver((_of) => User)
 export class UserCRUDResolvers {
@@ -79,7 +83,7 @@ export class UserCRUDResolvers {
         });
     }
 
-    @Mutation((_returns) => User)
+    @Mutation((_returns) => LoginResponse)
     async createUser(
         @Ctx() context: GraphQLContext,
         @Info() info: GraphQLResolveInfo,
@@ -95,10 +99,17 @@ export class UserCRUDResolvers {
         if (args.data.password.trim().length < 8)
             throw new Error("Bad password");
 
-        if (!BCRYPT_HASH.length || !JWT_SIGNING_KEY.length)
+        if (
+            !BCRYPT_SALT_ROUNDS ||
+            BCRYPT_SALT_ROUNDS < 10 ||
+            JWT_SIGNING_KEY.length < 10
+        )
             throw new Error("Server Error");
 
-        const password = await bcrypt.hash(args.data.password, BCRYPT_HASH);
+        const password = await bcryptHash(
+            args.data.password,
+            BCRYPT_SALT_ROUNDS
+        );
 
         const user = await UserCRUDResolvers.CRUD_RESOLVER.createUser(
             context,
@@ -107,14 +118,22 @@ export class UserCRUDResolvers {
                 ...args,
                 data: {
                     ...args.data,
+                    email: args.data.email.trim().toLowerCase(),
                     password
                 }
             }
         );
 
+        const expiresIn = "1d";
+
+        const token = jwtSign({ id: user.id }, JWT_SIGNING_KEY, {
+            expiresIn
+        });
+
         return {
             user,
-            token: jwtSign({ id: user.id }, JWT_SIGNING_KEY)
+            token,
+            expiresIn: ms(expiresIn)
         };
     }
 
@@ -160,5 +179,29 @@ export class UserCRUDResolvers {
         if (!emailExists) throw new Error("No such user!");
 
         return UserCRUDResolvers.CRUD_RESOLVER.updateUser(context, info, args);
+    }
+
+    @Mutation((_returns) => LoginResponse)
+    async login(@Ctx() context: GraphQLContext, @Args() args: LoginArgs) {
+        const user = await context.prisma.user.findUnique({
+            where: {
+                email: args.email.trim().toLowerCase()
+            }
+        });
+
+        if (!user) throw new Error("Signin Failed!");
+
+        const match = await bcryptCompare(args.password, user.password);
+        if (!match) throw new Error("Signin Failed!");
+
+        const expiresIn = "1d";
+
+        if (JWT_SIGNING_KEY.length < 10) throw new Error("Server Error");
+
+        const token = jwtSign({ id: user.id }, JWT_SIGNING_KEY, {
+            expiresIn
+        });
+
+        return { token, expiresIn: ms(expiresIn) };
     }
 }
