@@ -6,4 +6,5 @@ export interface GraphQLContext {
         never,
         Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
     >;
+    resolveUserId: () => Promise<{ id: string } | null | undefined>;
 }

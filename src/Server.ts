@@ -11,7 +11,9 @@ import { buildSchema } from "type-graphql";
 import { PrismaClient } from "./prisma/client";
 import { resolvers } from "./resolvers";
 import PubSubImplementation from "./PubSub";
-import { getUserId } from "./helpers/getUserId";
+import { getUserId } from "./helpers/auth/getUserId";
+import { GraphQLContext } from "./typings/global";
+import { authChecker } from "./helpers/auth/authChecker";
 
 export class Server {
     private static server: ApolloServer;
@@ -24,7 +26,8 @@ export class Server {
         const schema = await buildSchema({
             resolvers,
             emitSchemaFile: true,
-            pubSub
+            pubSub,
+            authChecker
         });
 
         // Create the GraphQL server
@@ -32,14 +35,17 @@ export class Server {
         Server.server = new ApolloServer({
             schema,
             playground: true,
-            context(expressContext) {
+            context(expressContext): GraphQLContext {
                 return {
                     prisma,
-                    userId: getUserId(
-                        expressContext.connection
-                            ? expressContext.connection.context.Authorization
-                            : expressContext.req.headers.authorization
-                    )
+                    resolveUserId() {
+                        return getUserId(
+                            expressContext.connection
+                                ? expressContext.connection.context
+                                      .Authorization
+                                : expressContext.req.headers.authorization
+                        );
+                    }
                 };
             }
         });
