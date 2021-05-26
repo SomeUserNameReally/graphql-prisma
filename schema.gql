@@ -217,11 +217,18 @@ input DateTimeFilter {
   notIn: [DateTime!]
 }
 
+type LoginResponse {
+  expiresIn: Int!
+  token: String!
+  user: User
+}
+
 type Mutation {
   createPost(data: PostCreateInput!): Post!
-  createUser(data: UserCreateInput!): User!
+  createUser(data: UserCreateInput!): LoginResponse!
   deletePost(where: PostWhereUniqueInput!): Post!
   deleteUser(where: UserWhereUniqueInput!): User
+  login(email: String!, password: String!): LoginResponse!
   updatePost(data: PostUpdateInput!, where: PostWhereUniqueInput!): Post!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
 }
@@ -499,6 +506,7 @@ type User {
   firstName: String!
   id: String!
   lastName: String!
+  password: String!
   posts: [Post]!
   updatedAt: DateTime!
 }
@@ -511,6 +519,7 @@ input UserCreateInput {
   firstName: String!
   id: String
   lastName: String!
+  password: String!
   posts: PostCreateNestedManyWithoutAuthorInput
   updatedAt: DateTime
 }
@@ -544,6 +553,7 @@ input UserCreateWithoutCommentsInput {
   firstName: String!
   id: String
   lastName: String!
+  password: String!
   posts: PostCreateNestedManyWithoutAuthorInput
   updatedAt: DateTime
 }
@@ -556,6 +566,7 @@ input UserCreateWithoutPostsInput {
   firstName: String!
   id: String
   lastName: String!
+  password: String!
   updatedAt: DateTime
 }
 
@@ -567,6 +578,7 @@ input UserUpdateInput {
   firstName: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   lastName: StringFieldUpdateOperationsInput
+  password: StringFieldUpdateOperationsInput
   posts: PostUpdateManyWithoutAuthorInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
@@ -594,6 +606,7 @@ input UserUpdateWithoutCommentsInput {
   firstName: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   lastName: StringFieldUpdateOperationsInput
+  password: StringFieldUpdateOperationsInput
   posts: PostUpdateManyWithoutAuthorInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
@@ -606,6 +619,7 @@ input UserUpdateWithoutPostsInput {
   firstName: StringFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   lastName: StringFieldUpdateOperationsInput
+  password: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
 }
 
