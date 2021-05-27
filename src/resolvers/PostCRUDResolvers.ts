@@ -45,15 +45,24 @@ export class PostCRUDResolvers {
             args.query
                 ? {
                       where: {
-                          OR: [
+                          AND: [
                               {
-                                  title: {
-                                      contains: args.query
-                                  }
+                                  OR: [
+                                      {
+                                          title: {
+                                              contains: args.query
+                                          }
+                                      },
+                                      {
+                                          body: {
+                                              contains: args.query
+                                          }
+                                      }
+                                  ]
                               },
                               {
-                                  body: {
-                                      contains: args.query
+                                  published: {
+                                      equals: true
                                   }
                               }
                           ]
