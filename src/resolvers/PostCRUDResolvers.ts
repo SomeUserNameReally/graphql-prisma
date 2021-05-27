@@ -68,7 +68,13 @@ export class PostCRUDResolvers {
                           ]
                       }
                   }
-                : {}
+                : {
+                      where: {
+                          published: {
+                              equals: true
+                          }
+                      }
+                  }
         );
     }
 
