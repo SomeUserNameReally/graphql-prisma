@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo } from "graphql";
 import {
     Args,
+    Authorized,
     Ctx,
     FieldResolver,
     Info,
@@ -77,6 +78,7 @@ export class PostCRUDResolvers {
         );
     }
 
+    @Authorized()
     @Mutation((_returns) => Post)
     async createPost(
         @Ctx() context: GraphQLContext,
@@ -84,10 +86,22 @@ export class PostCRUDResolvers {
         @Args() args: CreatePostArgs,
         @PubSub() pubsub: PubSubImplementation
     ) {
+        const userIdInfo = await context.resolveUserId();
+
         const post = await PostCRUDResolvers.CRUD_RESOLVER.createPost(
             context,
             info,
-            args
+            {
+                ...args,
+                data: {
+                    ...args.data,
+                    author: {
+                        connect: {
+                            id: userIdInfo?.id
+                        }
+                    }
+                }
+            }
         );
 
         if (post.published)
