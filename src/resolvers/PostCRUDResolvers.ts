@@ -15,6 +15,7 @@ import {
     DeletePostArgs,
     Post,
     PostCrudResolver,
+    PostWhereInput,
     UpdatePostArgs,
     User
 } from "../prisma/generated/type-graphql";
@@ -39,6 +40,12 @@ export class PostCRUDResolvers {
         @Info() info: GraphQLResolveInfo,
         @Args() args: FindManyPostArgs
     ) {
+        const published: Pick<PostWhereInput, "published"> = {
+            published: {
+                equals: true
+            }
+        };
+
         return PostCRUDResolvers.CRUD_RESOLVER.posts(
             context,
             info,
@@ -60,20 +67,12 @@ export class PostCRUDResolvers {
                                       }
                                   ]
                               },
-                              {
-                                  published: {
-                                      equals: true
-                                  }
-                              }
+                              published
                           ]
                       }
                   }
                 : {
-                      where: {
-                          published: {
-                              equals: true
-                          }
-                      }
+                      where: published
                   }
         );
     }
