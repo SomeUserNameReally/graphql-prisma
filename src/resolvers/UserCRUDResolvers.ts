@@ -1,6 +1,7 @@
 import { GraphQLResolveInfo } from "graphql";
 import {
     Args,
+    Authorized,
     Ctx,
     FieldResolver,
     Info,
@@ -136,6 +137,7 @@ export class UserCRUDResolvers {
         };
     }
 
+    @Authorized()
     @Mutation((_returns) => User, {
         nullable: true
     })
@@ -144,19 +146,25 @@ export class UserCRUDResolvers {
         @Info() info: GraphQLResolveInfo,
         @Args() args: DeleteUserArgs
     ) {
-        if (!args.where.id) throw new Error("Please provide a valid user ID!");
+        const userIdInfo = await context.resolveUserId();
 
-        const emailExists = await context.prisma.user.findUnique({
+        const userExists = await context.prisma.user.findUnique({
             where: {
-                id: args.where.id
+                id: userIdInfo?.id
             }
         });
 
-        if (!emailExists) throw new Error("No such user!");
+        if (!userExists) throw new Error("No such user!");
 
-        return UserCRUDResolvers.CRUD_RESOLVER.deleteUser(context, info, args);
+        return UserCRUDResolvers.CRUD_RESOLVER.deleteUser(context, info, {
+            ...args,
+            where: {
+                id: userIdInfo?.id
+            }
+        });
     }
 
+    @Authorized()
     @Mutation((_returns) => User, {
         nullable: true
     })
@@ -165,6 +173,8 @@ export class UserCRUDResolvers {
         @Info() info: GraphQLResolveInfo,
         @Args() args: UpdateUserArgs
     ) {
+        const userIdInfo = await context.resolveUserId();
+
         const emailExists = await context.prisma.user.findUnique({
             where: args.where.id
                 ? {
@@ -177,7 +187,12 @@ export class UserCRUDResolvers {
 
         if (!emailExists) throw new Error("No such user!");
 
-        return UserCRUDResolvers.CRUD_RESOLVER.updateUser(context, info, args);
+        return UserCRUDResolvers.CRUD_RESOLVER.updateUser(context, info, {
+            ...args,
+            where: {
+                id: userIdInfo?.id
+            }
+        });
     }
 
     @Mutation((_returns) => LoginResponse)
