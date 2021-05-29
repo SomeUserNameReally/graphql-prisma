@@ -122,11 +122,16 @@ export class PostCRUDResolvers {
         @Args() args: DeletePostArgs
     ) {
         const userIdInfo = await context.resolveUserId();
+        if (!userIdInfo || !userIdInfo.id) throw new Error("User not found!");
+        // Presumably we'd make our own input or args type and
+        // mark post id as a required parameter.
+        // All the same, this works too.
+        if (!args.where.id) throw new Error("No post id given!");
 
         const post = await context.prisma.post.findFirst({
             where: {
                 id: args.where.id,
-                authorId: (userIdInfo && userIdInfo.id) || undefined
+                authorId: userIdInfo.id
             }
         });
 
