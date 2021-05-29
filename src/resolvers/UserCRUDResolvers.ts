@@ -99,11 +99,7 @@ export class UserCRUDResolvers {
         if (args.data.password.trim().length < 8)
             throw new Error("Bad password");
 
-        if (
-            !BCRYPT_SALT_ROUNDS ||
-            BCRYPT_SALT_ROUNDS < 10 ||
-            JWT_SIGNING_KEY.length < 10
-        )
+        if (BCRYPT_SALT_ROUNDS < 10 || JWT_SIGNING_KEY.length < 10)
             throw new Error("Server Error");
 
         const password = await bcryptHash(
@@ -150,7 +146,7 @@ export class UserCRUDResolvers {
 
         const userExists = await context.prisma.user.findUnique({
             where: {
-                id: userIdInfo?.id
+                id: (userIdInfo && userIdInfo.id) || undefined
             }
         });
 
@@ -159,7 +155,7 @@ export class UserCRUDResolvers {
         return UserCRUDResolvers.CRUD_RESOLVER.deleteUser(context, info, {
             ...args,
             where: {
-                id: userIdInfo?.id
+                id: (userIdInfo && userIdInfo.id) || undefined
             }
         });
     }
@@ -190,7 +186,7 @@ export class UserCRUDResolvers {
         return UserCRUDResolvers.CRUD_RESOLVER.updateUser(context, info, {
             ...args,
             where: {
-                id: userIdInfo?.id
+                id: (userIdInfo && userIdInfo.id) || undefined
             }
         });
     }

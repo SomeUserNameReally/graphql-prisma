@@ -97,7 +97,7 @@ export class PostCRUDResolvers {
                     ...args.data,
                     author: {
                         connect: {
-                            id: userIdInfo?.id
+                            id: (userIdInfo && userIdInfo.id) || undefined
                         }
                     }
                 }
@@ -114,13 +114,30 @@ export class PostCRUDResolvers {
         return post;
     }
 
+    @Authorized()
     @Mutation((_returns) => Post)
     async deletePost(
         @Ctx() context: GraphQLContext,
         @Info() info: GraphQLResolveInfo,
         @Args() args: DeletePostArgs
     ) {
-        return PostCRUDResolvers.CRUD_RESOLVER.deletePost(context, info, args);
+        const userIdInfo = await context.resolveUserId();
+
+        const post = await context.prisma.post.findFirst({
+            where: {
+                id: args.where.id,
+                authorId: (userIdInfo && userIdInfo.id) || undefined
+            }
+        });
+
+        if (!post) throw new Error("No such post.");
+
+        return PostCRUDResolvers.CRUD_RESOLVER.deletePost(context, info, {
+            ...args,
+            where: {
+                id: args.where.id
+            }
+        });
     }
 
     @Mutation((_returns) => Post)
