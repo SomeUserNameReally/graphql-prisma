@@ -38,12 +38,13 @@ export class Server {
             context(expressContext): GraphQLContext {
                 return {
                     prisma,
-                    resolveUserId() {
+                    resolveUserId(transferNullPayload: boolean = false) {
                         return getUserId(
                             expressContext.connection
                                 ? expressContext.connection.context
                                       .Authorization
-                                : expressContext.req.headers.authorization
+                                : expressContext.req.headers.authorization,
+                            transferNullPayload
                         );
                     }
                 };

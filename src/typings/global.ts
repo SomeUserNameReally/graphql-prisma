@@ -1,4 +1,5 @@
 import { Prisma, PrismaClient } from "@prisma/client";
+import { getUserId } from "../helpers/auth/getUserId";
 
 export interface GraphQLContext {
     prisma: PrismaClient<
@@ -6,5 +7,7 @@ export interface GraphQLContext {
         never,
         Prisma.RejectOnNotFound | Prisma.RejectPerOperation | undefined
     >;
-    resolveUserId: () => Promise<{ id: string } | null | undefined>;
+    resolveUserId: (
+        transferNullPayload?: boolean
+    ) => ReturnType<typeof getUserId>;
 }

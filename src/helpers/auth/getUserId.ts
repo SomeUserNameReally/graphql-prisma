@@ -2,13 +2,17 @@ import { PrismaClient } from "../../prisma/client";
 import jwt from "jsonwebtoken";
 import { JWT_SIGNING_KEY } from "../../config";
 
-export const getUserId = async (authToken?: string) => {
-    if (!authToken || typeof authToken !== "string")
+export const getUserId = async (
+    authToken?: string,
+    transferNullPayload: boolean = false
+) => {
+    if (!authToken) {
+        if (transferNullPayload) return null;
         throw new Error("Please provide a valid auth token");
+    }
 
     if (!JWT_SIGNING_KEY || JWT_SIGNING_KEY.trim().length < 10) {
-        // Fail silently
-        return;
+        throw new Error("No jwt signing key found!");
     }
 
     const decoded = jwt.verify(authToken.split(" ")[1] || "", JWT_SIGNING_KEY);
