@@ -27,6 +27,15 @@ type Comment {
   userId: String!
 }
 
+input CommentCreateInput {
+  author: UserCreateNestedOneWithoutCommentsInput!
+  createdAt: DateTime
+  id: String
+  post: PostCreateNestedOneWithoutCommentsInput!
+  text: String!
+  updatedAt: DateTime
+}
+
 input CommentCreateManyAuthorInput {
   createdAt: DateTime
   id: String
@@ -224,6 +233,7 @@ type LoginResponse {
 }
 
 type Mutation {
+  createComment(data: CommentCreateInput!): Comment!
   createPost(data: PostCreateInput!): Post!
   createUser(data: UserCreateInput!): LoginResponse!
   deletePost(where: PostWhereUniqueInput!): Post!

@@ -1,9 +1,11 @@
 import { GraphQLResolveInfo } from "graphql";
 import {
     Args,
+    Authorized,
     Ctx,
     FieldResolver,
     Info,
+    Mutation,
     Query,
     Resolver,
     Root
@@ -11,6 +13,7 @@ import {
 import {
     Comment,
     CommentCrudResolver,
+    CreateCommentArgs,
     Post,
     User
 } from "../prisma/generated/type-graphql";
@@ -42,6 +45,36 @@ export class CommentCRUDResolvers {
                   }
                 : {}
         );
+    }
+
+    @Authorized()
+    @Mutation((_returns) => Comment)
+    async createComment(
+        @Ctx() context: GraphQLContext,
+        @Info() info: GraphQLResolveInfo,
+        @Args() args: CreateCommentArgs
+    ) {
+        const userIdInfo = await context.resolveUserId();
+
+        const user = await context.prisma.user.findUnique({
+            where: {
+                id: userIdInfo!.id
+            }
+        });
+
+        if (!user) throw new Error("No such user!");
+
+        return CommentCRUDResolvers.CRUD_RESOLVER.createComment(context, info, {
+            ...args,
+            data: {
+                ...args.data,
+                author: {
+                    connect: {
+                        id: user.id
+                    }
+                }
+            }
+        });
     }
 
     @FieldResolver((_returns) => Post)
