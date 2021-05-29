@@ -77,6 +77,9 @@ export class CommentCRUDResolvers {
         });
     }
 
+    // TODO: Intentionally left resolvers pending for
+    // updating and deleting comments.
+
     @FieldResolver((_returns) => Post)
     async post(@Ctx() context: GraphQLContext, @Root() parent: Comment) {
         return await context.prisma.post.findUnique({
