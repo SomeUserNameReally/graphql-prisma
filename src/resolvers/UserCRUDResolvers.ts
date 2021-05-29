@@ -47,18 +47,14 @@ export class UserCRUDResolvers {
                       where: {
                           OR: [
                               {
-                                  OR: [
-                                      {
-                                          firstName: {
-                                              contains: args.query
-                                          }
-                                      },
-                                      {
-                                          lastName: {
-                                              contains: args.query
-                                          }
-                                      }
-                                  ]
+                                  firstName: {
+                                      contains: args.query
+                                  }
+                              },
+                              {
+                                  lastName: {
+                                      contains: args.query
+                                  }
                               },
                               {
                                   email: {
