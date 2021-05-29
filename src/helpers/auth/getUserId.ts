@@ -11,7 +11,7 @@ export const getUserId = async (authToken?: string) => {
         return;
     }
 
-    const decoded = jwt.verify(authToken, JWT_SIGNING_KEY);
+    const decoded = jwt.verify(authToken.split(" ")[1] || "", JWT_SIGNING_KEY);
     if (typeof decoded === "string") throw new Error("Invalid JWT signature");
 
     return await PrismaClient.client.user.findUnique({
