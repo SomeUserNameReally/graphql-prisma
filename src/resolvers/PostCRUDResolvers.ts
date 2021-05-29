@@ -145,13 +145,36 @@ export class PostCRUDResolvers {
         });
     }
 
+    @Authorized()
     @Mutation((_returns) => Post)
     async updatePost(
         @Ctx() context: GraphQLContext,
         @Info() info: GraphQLResolveInfo,
         @Args() args: UpdatePostArgs
     ) {
-        return PostCRUDResolvers.CRUD_RESOLVER.updatePost(context, info, args);
+        const userIdInfo = await context.resolveUserId();
+
+        // Alternate method of circumventing question
+        // mark operator bug.
+        const user = await context.prisma.user.findUnique({
+            where: {
+                id: userIdInfo!.id
+            }
+        });
+
+        if (!user) throw new Error("No such post.");
+
+        return PostCRUDResolvers.CRUD_RESOLVER.updatePost(context, info, {
+            ...args,
+            data: {
+                ...args.data,
+                author: {
+                    connect: {
+                        id: user.id
+                    }
+                }
+            }
+        });
     }
 
     @FieldResolver((_returns) => User)
