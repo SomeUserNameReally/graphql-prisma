@@ -16,7 +16,6 @@ import ms from "ms";
 import {
     CreateUserArgs,
     DeleteUserArgs,
-    FindUniqueUserArgs,
     Post,
     UpdateUserArgs,
     User,
