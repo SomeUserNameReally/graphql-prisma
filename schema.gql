@@ -469,6 +469,7 @@ input PostWhereUniqueInput {
 
 type Query {
   comments(query: String): [Comment]!
+  post(where: PostWhereUniqueInput!): Post
   posts(query: String): [Post]!
   users(query: String): [User]!
 }

@@ -14,6 +14,7 @@ import {
 import {
     CreatePostArgs,
     DeletePostArgs,
+    FindUniquePostArgs,
     Post,
     PostCrudResolver,
     PostWhereInput,
@@ -41,11 +42,23 @@ export class PostCRUDResolvers {
         @Info() info: GraphQLResolveInfo,
         @Args() args: FindManyPostArgs
     ) {
-        const published: Pick<PostWhereInput, "published"> = {
-            published: {
-                equals: true
+        const userIdInfo = await context.resolveUserId(true);
+
+        const globalORConstraints: PostWhereInput["OR"] = [
+            {
+                published: {
+                    equals: true
+                }
             }
-        };
+        ];
+
+        if (userIdInfo) {
+            globalORConstraints.push({
+                authorId: {
+                    equals: userIdInfo.id
+                }
+            });
+        }
 
         return PostCRUDResolvers.CRUD_RESOLVER.posts(
             context,
@@ -68,14 +81,59 @@ export class PostCRUDResolvers {
                                       }
                                   ]
                               },
-                              published
+                              {
+                                  OR: globalORConstraints
+                              }
                           ]
                       }
                   }
                 : {
-                      where: published
+                      where: {
+                          OR: globalORConstraints
+                      }
                   }
         );
+    }
+
+    @Query((_returns) => Post, {
+        nullable: true
+    })
+    async post(
+        @Ctx() context: GraphQLContext,
+        @Info() info: GraphQLResolveInfo,
+        @Args() args: FindUniquePostArgs
+    ) {
+        const userIdInfo = await context.resolveUserId(true);
+
+        const globalORConstraints: PostWhereInput["OR"] = [
+            {
+                published: {
+                    equals: true
+                }
+            }
+        ];
+
+        if (userIdInfo) {
+            globalORConstraints.push({
+                authorId: {
+                    equals: userIdInfo.id
+                }
+            });
+        }
+
+        const post = await PostCRUDResolvers.CRUD_RESOLVER.post(
+            context,
+            info,
+            args
+        );
+
+        if (
+            !post ||
+            (!post.published && post.authorId !== (userIdInfo && userIdInfo.id))
+        )
+            return null;
+
+        return post;
     }
 
     @Authorized()
