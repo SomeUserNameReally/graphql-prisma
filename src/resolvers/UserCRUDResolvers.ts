@@ -90,6 +90,33 @@ export class UserCRUDResolvers {
         });
     }
 
+    @FieldResolver((_returns) => String, {
+        nullable: true
+    })
+    async email(
+        @Root() parent: User,
+        @Ctx() context: GraphQLContext,
+        @Info() info: GraphQLResolveInfo
+    ) {
+        const userIdInfo = await context.resolveUserId(true);
+
+        if (userIdInfo && parent.id === userIdInfo.id) {
+            const user = await UserCRUDResolvers.CRUD_RESOLVER.user(
+                context,
+                info,
+                {
+                    where: {
+                        id: userIdInfo.id
+                    }
+                }
+            );
+
+            return user!.email;
+        }
+
+        return "";
+    }
+
     @Mutation((_returns) => LoginResponse)
     async createUser(
         @Ctx() context: GraphQLContext,
