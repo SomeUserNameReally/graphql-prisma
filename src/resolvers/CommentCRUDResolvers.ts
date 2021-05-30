@@ -54,15 +54,17 @@ export class CommentCRUDResolvers {
         @Info() info: GraphQLResolveInfo,
         @Args() args: CreateCommentArgs
     ) {
+        // TODO: Create custom args for resolver.
         const userIdInfo = await context.resolveUserId();
 
-        const user = await context.prisma.user.findUnique({
+        // Make sure post exists and is published
+        const post = await context.prisma.post.findUnique({
             where: {
-                id: userIdInfo!.id
+                id: args.data.post.connect && args.data.post.connect.id
             }
         });
 
-        if (!user) throw new Error("No such user!");
+        if (!post || !post.published) throw new Error("Post not found!");
 
         return CommentCRUDResolvers.CRUD_RESOLVER.createComment(context, info, {
             ...args,
@@ -70,7 +72,7 @@ export class CommentCRUDResolvers {
                 ...args.data,
                 author: {
                     connect: {
-                        id: user.id
+                        id: userIdInfo!.id
                     }
                 }
             }
