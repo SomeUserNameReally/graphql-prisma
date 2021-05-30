@@ -55,11 +55,6 @@ export class UserCRUDResolvers {
                                   lastName: {
                                       contains: args.query
                                   }
-                              },
-                              {
-                                  email: {
-                                      contains: args.query
-                                  }
                               }
                           ]
                       }
@@ -83,9 +78,15 @@ export class UserCRUDResolvers {
         nullable: "items"
     })
     async posts(@Ctx() context: GraphQLContext, @Root() parent: User) {
+        const userIdInfo = await context.resolveUserId(true);
+
         return await context.prisma.post.findMany({
             where: {
-                authorId: parent.id
+                authorId: {
+                    equals: parent.id
+                },
+                published:
+                    userIdInfo && userIdInfo.id === parent.id ? undefined : true
             }
         });
     }
