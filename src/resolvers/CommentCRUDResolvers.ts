@@ -82,6 +82,9 @@ export class CommentCRUDResolvers {
     // TODO: Intentionally left resolvers pending for
     // updating and deleting comments.
 
+    // To "delete" comments on posts unpublished,
+    // set the comments `hidden` field to true.
+
     @FieldResolver((_returns) => Post)
     async post(@Ctx() context: GraphQLContext, @Root() parent: Comment) {
         return await context.prisma.post.findUnique({
