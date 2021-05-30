@@ -16,6 +16,7 @@ import ms from "ms";
 import {
     CreateUserArgs,
     DeleteUserArgs,
+    FindUniqueUserArgs,
     Post,
     UpdateUserArgs,
     User,
@@ -66,6 +67,17 @@ export class UserCRUDResolvers {
                   }
                 : {}
         );
+    }
+
+    @Authorized()
+    @Query((_returns) => User)
+    async me(@Ctx() context: GraphQLContext, @Info() info: GraphQLResolveInfo) {
+        const userIdInfo = await context.resolveUserId();
+        return UserCRUDResolvers.CRUD_RESOLVER.user(context, info, {
+            where: {
+                id: userIdInfo!.id
+            }
+        });
     }
 
     @FieldResolver((_returns) => [Post], {
