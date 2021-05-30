@@ -15,6 +15,7 @@ input BoolFilter {
 type Comment {
   author: User!
   createdAt: DateTime!
+  hidden: Boolean!
   id: String!
   post: Post!
 
@@ -30,6 +31,7 @@ type Comment {
 input CommentCreateInput {
   author: UserCreateNestedOneWithoutCommentsInput!
   createdAt: DateTime
+  hidden: Boolean
   id: String
   post: PostCreateNestedOneWithoutCommentsInput!
   text: String!
@@ -38,6 +40,7 @@ input CommentCreateInput {
 
 input CommentCreateManyAuthorInput {
   createdAt: DateTime
+  hidden: Boolean
   id: String
   postId: String!
   text: String!
@@ -51,6 +54,7 @@ input CommentCreateManyAuthorInputEnvelope {
 
 input CommentCreateManyPostInput {
   createdAt: DateTime
+  hidden: Boolean
   id: String
   text: String!
   updatedAt: DateTime
@@ -88,6 +92,7 @@ input CommentCreateOrConnectWithoutPostInput {
 
 input CommentCreateWithoutAuthorInput {
   createdAt: DateTime
+  hidden: Boolean
   id: String
   post: PostCreateNestedOneWithoutCommentsInput!
   text: String!
@@ -97,6 +102,7 @@ input CommentCreateWithoutAuthorInput {
 input CommentCreateWithoutPostInput {
   author: UserCreateNestedOneWithoutCommentsInput!
   createdAt: DateTime
+  hidden: Boolean
   id: String
   text: String!
   updatedAt: DateTime
@@ -107,6 +113,7 @@ input CommentScalarWhereInput {
   NOT: [CommentScalarWhereInput!]
   OR: [CommentScalarWhereInput!]
   createdAt: DateTimeFilter
+  hidden: BoolFilter
   id: StringFilter
   postId: StringFilter
   text: StringFilter
@@ -121,6 +128,7 @@ type CommentSubscriptionPayload {
 
 input CommentUpdateManyMutationInput {
   createdAt: DateTimeFieldUpdateOperationsInput
+  hidden: BoolFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   text: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput
@@ -176,6 +184,7 @@ input CommentUpdateWithWhereUniqueWithoutPostInput {
 
 input CommentUpdateWithoutAuthorInput {
   createdAt: DateTimeFieldUpdateOperationsInput
+  hidden: BoolFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   post: PostUpdateOneRequiredWithoutCommentsInput
   text: StringFieldUpdateOperationsInput
@@ -185,6 +194,7 @@ input CommentUpdateWithoutAuthorInput {
 input CommentUpdateWithoutPostInput {
   author: UserUpdateOneRequiredWithoutCommentsInput
   createdAt: DateTimeFieldUpdateOperationsInput
+  hidden: BoolFieldUpdateOperationsInput
   id: StringFieldUpdateOperationsInput
   text: StringFieldUpdateOperationsInput
   updatedAt: DateTimeFieldUpdateOperationsInput

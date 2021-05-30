@@ -113,4 +113,9 @@ model Comment {
   // soon.
   /// @onDelete(SET_NULL)
   postId    String
+  // Proposed feature to be released soon.
+  // The triple slash below is needed
+  // as it's not a regular comment.
+  /// @TypeGraphQL.omit(input: true)
+  hidden    Boolean  @default(false)
 }
