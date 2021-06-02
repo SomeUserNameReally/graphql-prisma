@@ -1,4 +1,4 @@
-import { ArgsType, Field } from "type-graphql";
+import { ArgsType, Field, Int } from "type-graphql";
 
 @ArgsType()
 export class FindManyUserArgs {
@@ -6,4 +6,14 @@ export class FindManyUserArgs {
         nullable: true
     })
     query?: string;
+
+    @Field((_type) => Int, {
+        nullable: true
+    })
+    take: number = 10;
+
+    @Field((_type) => Int, {
+        nullable: true
+    })
+    skip: number = 0;
 }

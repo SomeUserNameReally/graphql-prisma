@@ -39,28 +39,37 @@ export class UserCRUDResolvers {
         @Info() info: GraphQLResolveInfo,
         @Args() args: FindManyUserArgs
     ) {
-        return UserCRUDResolvers.CRUD_RESOLVER.users(
-            context,
-            info,
-            args.query
+        const { take: _take, skip: _skip } = args;
+
+        // Default values can be kept in sync with
+        // global variables or db data.
+        const take = _take >= 0 && _take <= 100 ? _take : 10;
+        const skip = _skip >= 0 ? _skip : 10;
+
+        const base: Partial<FindManyUserArgs> = {
+            take,
+            skip
+        };
+
+        return UserCRUDResolvers.CRUD_RESOLVER.users(context, info, {
+            ...base,
+            where: args.query
                 ? {
-                      where: {
-                          OR: [
-                              {
-                                  firstName: {
-                                      contains: args.query
-                                  }
-                              },
-                              {
-                                  lastName: {
-                                      contains: args.query
-                                  }
+                      OR: [
+                          {
+                              firstName: {
+                                  contains: args.query
                               }
-                          ]
-                      }
+                          },
+                          {
+                              lastName: {
+                                  contains: args.query
+                              }
+                          }
+                      ]
                   }
-                : {}
-        );
+                : undefined
+        });
     }
 
     @Authorized()

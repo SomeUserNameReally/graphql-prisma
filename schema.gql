@@ -482,7 +482,7 @@ type Query {
   me: User!
   post(where: PostWhereUniqueInput!): Post
   posts(query: String): [Post]!
-  users(query: String): [User]!
+  users(query: String, skip: Int = 0, take: Int = 10): [User]!
 }
 
 enum QueryMode {
