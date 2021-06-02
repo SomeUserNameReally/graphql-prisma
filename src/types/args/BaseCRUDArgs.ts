@@ -1,4 +1,4 @@
-export abstract class BaseArgs {
+export abstract class BaseCRUDArgs {
     take!: number;
     skip!: number;
 }

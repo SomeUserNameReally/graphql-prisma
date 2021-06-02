@@ -1,8 +1,8 @@
 import { ArgsType, Field, Int } from "type-graphql";
-import { BaseArgs } from "./BaseCRUDArgs";
+import { BaseCRUDArgs } from "./BaseCRUDArgs";
 
 @ArgsType()
-export class FindManyUserArgs implements BaseArgs {
+export class FindManyUserArgs implements BaseCRUDArgs {
     @Field((_type) => String, {
         nullable: true
     })
