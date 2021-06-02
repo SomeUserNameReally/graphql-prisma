@@ -11,6 +11,7 @@ import {
     Resolver,
     Root
 } from "type-graphql";
+import { standardizePaginationParams } from "../helpers/resolvers/standardizePaginationParams";
 import {
     CreatePostArgs,
     DeletePostArgs,
@@ -42,6 +43,7 @@ export class PostCRUDResolvers {
         @Info() info: GraphQLResolveInfo,
         @Args() args: FindManyPostArgs
     ) {
+        const { take, skip } = standardizePaginationParams(args);
         const userIdInfo = await context.resolveUserId(true);
 
         const globalORConstraints: PostWhereInput["OR"] = [
@@ -60,39 +62,39 @@ export class PostCRUDResolvers {
             });
         }
 
-        return PostCRUDResolvers.CRUD_RESOLVER.posts(
-            context,
-            info,
-            args.query
+        const base: Partial<FindManyPostArgs> = {
+            take,
+            skip
+        };
+
+        return PostCRUDResolvers.CRUD_RESOLVER.posts(context, info, {
+            ...base,
+            where: args.query
                 ? {
-                      where: {
-                          AND: [
-                              {
-                                  OR: [
-                                      {
-                                          title: {
-                                              contains: args.query
-                                          }
-                                      },
-                                      {
-                                          body: {
-                                              contains: args.query
-                                          }
+                      AND: [
+                          {
+                              OR: [
+                                  {
+                                      title: {
+                                          contains: args.query
                                       }
-                                  ]
-                              },
-                              {
-                                  OR: globalORConstraints
-                              }
-                          ]
-                      }
+                                  },
+                                  {
+                                      body: {
+                                          contains: args.query
+                                      }
+                                  }
+                              ]
+                          },
+                          {
+                              OR: globalORConstraints
+                          }
+                      ]
                   }
                 : {
-                      where: {
-                          OR: globalORConstraints
-                      }
+                      OR: globalORConstraints
                   }
-        );
+        });
     }
 
     @Query((_returns) => Post, {
