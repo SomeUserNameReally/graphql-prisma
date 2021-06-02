@@ -17,4 +17,9 @@ export class FindManyUserArgs implements BaseCRUDArgs {
         nullable: true
     })
     skip: number = 0;
+
+    @Field((_type) => String, {
+        nullable: true
+    })
+    cursorOnId?: string;
 }
