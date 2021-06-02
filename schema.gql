@@ -481,8 +481,8 @@ type Query {
   comments(query: String): [Comment]!
   me: User!
   post(where: PostWhereUniqueInput!): Post
-  posts(query: String, skip: Int = 0, take: Int = 10): [Post]!
-  users(query: String, skip: Int = 0, take: Int = 10): [User]!
+  posts(cursorOnId: String, query: String, skip: Int = 0, take: Int = 10): [Post]!
+  users(cursorOnId: String, query: String, skip: Int = 0, take: Int = 10): [User]!
 }
 
 enum QueryMode {
