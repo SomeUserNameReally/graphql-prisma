@@ -53,6 +53,7 @@ export class UserCRUDResolvers {
 
         return UserCRUDResolvers.CRUD_RESOLVER.users(context, info, {
             ...base,
+            ...args,
             where: args.query
                 ? {
                       OR: [
