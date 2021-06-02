@@ -16,6 +16,7 @@ import ms from "ms";
 import {
     CreateUserArgs,
     DeleteUserArgs,
+    FindManyUserArgs as _FindManyUserArgs,
     Post,
     UpdateUserArgs,
     User,
@@ -42,30 +43,31 @@ export class UserCRUDResolvers {
     ) {
         const { take, skip } = standardizePaginationParams(args);
 
-        const base: Partial<FindManyUserArgs> = {
+        const _args: Partial<_FindManyUserArgs> = {
             take,
             skip
         };
 
+        if (args.query) {
+            _args.where = {
+                OR: [
+                    {
+                        firstName: {
+                            contains: args.query
+                        }
+                    },
+                    {
+                        lastName: {
+                            contains: args.query
+                        }
+                    }
+                ]
+            };
+        }
+
         return UserCRUDResolvers.CRUD_RESOLVER.users(context, info, {
-            ...base,
             ...args,
-            where: args.query
-                ? {
-                      OR: [
-                          {
-                              firstName: {
-                                  contains: args.query
-                              }
-                          },
-                          {
-                              lastName: {
-                                  contains: args.query
-                              }
-                          }
-                      ]
-                  }
-                : undefined
+            ..._args
         });
     }
 
