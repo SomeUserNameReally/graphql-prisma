@@ -88,7 +88,7 @@ export class PostCRUDResolvers {
                             }
                         ]
                     },
-                    ..._args.where!.OR!
+                    { OR: _args.where!.OR! }
                 ]
             };
         }
