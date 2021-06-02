@@ -15,6 +15,7 @@ import { standardizePaginationParams } from "../helpers/resolvers/standardizePag
 import {
     CreatePostArgs,
     DeletePostArgs,
+    FindManyPostArgs as _FindManyPostArgs,
     FindUniquePostArgs,
     Post,
     PostCrudResolver,
@@ -62,38 +63,39 @@ export class PostCRUDResolvers {
             });
         }
 
-        const base: Partial<FindManyPostArgs> = {
+        const _args: Partial<_FindManyPostArgs> = {
             take,
-            skip
+            skip,
+            where: {
+                OR: globalORConstraints
+            }
         };
 
+        if (args.query) {
+            _args.where = {
+                AND: [
+                    {
+                        OR: [
+                            {
+                                title: {
+                                    contains: args.query
+                                }
+                            },
+                            {
+                                body: {
+                                    contains: args.query
+                                }
+                            }
+                        ]
+                    },
+                    ..._args.where!.OR!
+                ]
+            };
+        }
+
         return PostCRUDResolvers.CRUD_RESOLVER.posts(context, info, {
-            ...base,
-            where: args.query
-                ? {
-                      AND: [
-                          {
-                              OR: [
-                                  {
-                                      title: {
-                                          contains: args.query
-                                      }
-                                  },
-                                  {
-                                      body: {
-                                          contains: args.query
-                                      }
-                                  }
-                              ]
-                          },
-                          {
-                              OR: globalORConstraints
-                          }
-                      ]
-                  }
-                : {
-                      OR: globalORConstraints
-                  }
+            ...args,
+            ..._args
         });
     }
 
