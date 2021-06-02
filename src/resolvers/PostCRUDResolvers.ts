@@ -66,6 +66,9 @@ export class PostCRUDResolvers {
         const _args: Partial<_FindManyPostArgs> = {
             take,
             skip,
+            cursor: {
+                id: args.cursorOnId
+            },
             where: {
                 OR: globalORConstraints
             }
