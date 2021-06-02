@@ -26,6 +26,7 @@ import { GraphQLContext } from "../typings/global";
 import { BCRYPT_SALT_ROUNDS, JWT_SIGNING_KEY } from "../config";
 import { LoginArgs } from "../types/args/LoginArgs";
 import { LoginResponse } from "../types/object/LoginResponse";
+import { standardizePaginationParams } from "../helpers/resolvers/standardizePaginationParams";
 
 @Resolver((_of) => User)
 export class UserCRUDResolvers {
@@ -39,12 +40,7 @@ export class UserCRUDResolvers {
         @Info() info: GraphQLResolveInfo,
         @Args() args: FindManyUserArgs
     ) {
-        const { take: _take, skip: _skip } = args;
-
-        // Default values can be kept in sync with
-        // global variables or db data.
-        const take = _take >= 0 && _take <= 100 ? _take : 10;
-        const skip = _skip >= 0 ? _skip : 0;
+        const { take, skip } = standardizePaginationParams(args);
 
         const base: Partial<FindManyUserArgs> = {
             take,
