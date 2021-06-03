@@ -60,4 +60,10 @@ export class Server {
             }`
         );
     }
+
+    static async close() {
+        if (!Server.server) return;
+
+        return Server.server.stop();
+    }
 }
