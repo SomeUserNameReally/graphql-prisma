@@ -46,9 +46,11 @@ export class UserCRUDResolvers {
         const _args: Partial<_FindManyUserArgs> = {
             take,
             skip,
-            cursor: {
-                id: args.cursorOnId
-            }
+            cursor: args.cursorOnId
+                ? {
+                      id: args.cursorOnId
+                  }
+                : undefined
         };
 
         if (args.query) {
