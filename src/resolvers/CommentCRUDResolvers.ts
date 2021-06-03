@@ -32,6 +32,8 @@ export class CommentCRUDResolvers {
         @Info() info: GraphQLResolveInfo,
         @Args() args: FindManyCommentArgs
     ) {
+        // TODO: As an exercise, implement pagination
+
         return CommentCRUDResolvers.CRUD_RESOLVER.comments(
             context,
             info,
