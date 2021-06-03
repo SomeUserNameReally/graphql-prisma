@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "NODE_ENV=test nodemon --exec ts-node ./src/index.ts -- -e test",
+    "test": "jest --watch",
+    "start:test": "NODE_ENV=test nodemon --exec ts-node ./src/index.ts -- -e test",
     "dev": "NODE_ENV=dev nodemon --exec ts-node ./src/index.ts",
     "start": "NODE_ENV=prod nodemon --exec ts-node ./src/index.ts -- -e prod",
     "prisma:generate": "npx prisma generate",
@@ -16,6 +17,7 @@
   "devDependencies": {
     "@types/bcrypt": "5.0.0",
     "@types/command-line-args": "5.0.0",
+    "@types/jest": "26.0.23",
     "@types/jsonwebtoken": "8.5.1",
     "@types/ms": "0.7.31",
     "@types/node": "15.0.2",
