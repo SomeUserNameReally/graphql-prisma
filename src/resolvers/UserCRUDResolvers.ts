@@ -41,7 +41,7 @@ export class UserCRUDResolvers {
         @Info() info: GraphQLResolveInfo,
         @Args() args: FindManyUserArgs
     ) {
-        const { take, skip } = standardizePaginationParams(args);
+        const { take, skip, orderBy } = standardizePaginationParams(args);
 
         const _args: Partial<_FindManyUserArgs> = {
             take,
@@ -72,7 +72,8 @@ export class UserCRUDResolvers {
 
         return UserCRUDResolvers.CRUD_RESOLVER.users(context, info, {
             ...args,
-            ..._args
+            ..._args,
+            orderBy
         });
     }
 

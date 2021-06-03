@@ -482,12 +482,17 @@ type Query {
   me: User!
   post(where: PostWhereUniqueInput!): Post
   posts(cursorOnId: String, query: String, skip: Int = 0, take: Int = 10): [Post]!
-  users(cursorOnId: String, query: String, skip: Int = 0, take: Int = 10): [User]!
+  users(cursorOnId: String, orderBy: UserOrderByInput, query: String, skip: Int = 0, take: Int = 10): [User]!
 }
 
 enum QueryMode {
   default
   insensitive
+}
+
+enum SortOrder {
+  asc
+  desc
 }
 
 input StringFieldUpdateOperationsInput {
@@ -589,6 +594,17 @@ input UserCreateWithoutPostsInput {
   lastName: String!
   password: String!
   updatedAt: DateTime
+}
+
+input UserOrderByInput {
+  age: SortOrder
+  createdAt: SortOrder
+  email: SortOrder
+  firstName: SortOrder
+  id: SortOrder
+  lastName: SortOrder
+  password: SortOrder
+  updatedAt: SortOrder
 }
 
 input UserUpdateInput {
