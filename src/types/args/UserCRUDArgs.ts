@@ -1,8 +1,10 @@
 import { ArgsType, Field, Int } from "type-graphql";
+import { UserOrderByInput } from "../../prisma/generated/type-graphql";
 import { BaseCRUDArgs } from "./BaseCRUDArgs";
 
 @ArgsType()
-export class FindManyUserArgs implements BaseCRUDArgs {
+export class FindManyUserArgs<T extends UserOrderByInput = UserOrderByInput>
+    implements BaseCRUDArgs<T> {
     @Field((_type) => String, {
         nullable: true
     })
@@ -22,4 +24,9 @@ export class FindManyUserArgs implements BaseCRUDArgs {
         nullable: true
     })
     cursorOnId?: string;
+
+    @Field((_type) => UserOrderByInput, {
+        nullable: true
+    })
+    orderBy?: T | undefined;
 }

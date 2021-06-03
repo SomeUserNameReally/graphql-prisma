@@ -1,8 +1,10 @@
 import { ArgsType, Field, Int } from "type-graphql";
+import { PostOrderByInput } from "../../prisma/generated/type-graphql";
 import { BaseCRUDArgs } from "./BaseCRUDArgs";
 
 @ArgsType()
-export class FindManyPostArgs implements BaseCRUDArgs {
+export class FindManyPostArgs<T extends PostOrderByInput = PostOrderByInput>
+    implements BaseCRUDArgs<T> {
     @Field((_type) => String, {
         nullable: true
     })
@@ -22,4 +24,9 @@ export class FindManyPostArgs implements BaseCRUDArgs {
         nullable: true
     })
     cursorOnId?: string;
+
+    @Field((_type) => PostOrderByInput, {
+        nullable: true
+    })
+    orderBy?: T | undefined;
 }
