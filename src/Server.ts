@@ -55,7 +55,9 @@ export class Server {
         const { url } = await Server.server.listen(4200);
 
         console.log(
-            `Server is running, GraphQL Playground available at ${url}`
+            `Server is running, GraphQL Playground available at ${url} in env ${
+                process.env.NODE_ENV || "NULL"
+            }`
         );
     }
 }
