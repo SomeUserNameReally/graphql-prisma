@@ -44,7 +44,7 @@ export class PostCRUDResolvers {
         @Info() info: GraphQLResolveInfo,
         @Args() args: FindManyPostArgs
     ) {
-        const { take, skip } = standardizePaginationParams(args);
+        const { take, skip, orderBy } = standardizePaginationParams(args);
         const userIdInfo = await context.resolveUserId(true);
 
         const globalORConstraints: PostWhereInput["OR"] = [
@@ -98,7 +98,8 @@ export class PostCRUDResolvers {
 
         return PostCRUDResolvers.CRUD_RESOLVER.posts(context, info, {
             ...args,
-            ..._args
+            ..._args,
+            orderBy
         });
     }
 

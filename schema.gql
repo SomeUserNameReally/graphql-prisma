@@ -372,6 +372,16 @@ input PostCreateWithoutCommentsInput {
   updatedAt: DateTime
 }
 
+input PostOrderByInput {
+  authorId: SortOrder
+  body: SortOrder
+  createdAt: SortOrder
+  id: SortOrder
+  published: SortOrder
+  title: SortOrder
+  updatedAt: SortOrder
+}
+
 input PostScalarWhereInput {
   AND: [PostScalarWhereInput!]
   NOT: [PostScalarWhereInput!]
@@ -481,7 +491,7 @@ type Query {
   comments(query: String): [Comment]!
   me: User!
   post(where: PostWhereUniqueInput!): Post
-  posts(cursorOnId: String, query: String, skip: Int = 0, take: Int = 10): [Post]!
+  posts(cursorOnId: String, orderBy: PostOrderByInput, query: String, skip: Int = 0, take: Int = 10): [Post]!
   users(cursorOnId: String, orderBy: UserOrderByInput, query: String, skip: Int = 0, take: Int = 10): [User]!
 }
 
