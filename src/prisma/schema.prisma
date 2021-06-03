@@ -32,6 +32,7 @@ model User {
   /// @TypeGraphQL.omit(input: true)
   createdAt DateTime  @default(now())
   email     String    @unique
+  /// @TypeGraphQL.omit(output: true)
   password  String
   firstName String    @db.VarChar(255)
   lastName  String    @db.VarChar(255)

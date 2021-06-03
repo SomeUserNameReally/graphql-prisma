@@ -528,7 +528,6 @@ type User {
   firstName: String!
   id: String!
   lastName: String!
-  password: String!
   posts: [Post]!
   updatedAt: DateTime!
 }
