@@ -12,9 +12,7 @@ interface StandardizePaginationParams<T> {
 
 // It may not apply to every scenario though...
 export const standardizePaginationParams = <
-    U extends GenericObject = GenericObject & {
-        password?: "asc" | "desc" | undefined;
-    },
+    U extends GenericObject = GenericObject,
     T extends BaseCRUDArgs<U> = BaseCRUDArgs<U>
 >({
     take: _take,
