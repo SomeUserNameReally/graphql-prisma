@@ -1,11 +1,21 @@
 import { gql } from "apollo-boost";
 import { PrismaClient } from "../src/prisma/client";
 import { User } from "../src/prisma/generated/type-graphql";
+import { LoginArgs } from "../src/types/args/LoginArgs";
 import { getApolloClient } from "./helpers/getApolloClient";
 import { seedDatabase, userInfo } from "./helpers/seedDatabase";
 
 const client = getApolloClient();
 const prisma = PrismaClient.client;
+
+const loginMutation = gql`
+    mutation($email: String!, $password: String!) {
+        login(email: $email, password: $password) {
+            token
+            expiresIn
+        }
+    }
+`;
 
 describe("Test User model related functionality", () => {
     beforeAll(seedDatabase);
@@ -97,16 +107,14 @@ describe("Test User model related functionality", () => {
     });
 
     test("Should throw on logging in with bad credentials", async () => {
+        const variables = {
+            email: "NULL_EMAIL",
+            password: "NULL_PASSWORD"
+        };
         await expect(
-            client.mutate({
-                mutation: gql`
-                    mutation {
-                        login(email: "NULL_EMAIL", password: "NULL_PASSWORD") {
-                            token
-                            expiresIn
-                        }
-                    }
-                `
+            client.mutate<any, LoginArgs>({
+                mutation: loginMutation,
+                variables
             })
         ).rejects.toThrow();
     });
