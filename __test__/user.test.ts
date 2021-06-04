@@ -173,4 +173,19 @@ describe("Test User model related functionality", () => {
             });
         }
     });
+
+    test("Should throw on logging in with bad credentials", async () => {
+        expect(
+            client.mutate({
+                mutation: gql`
+                    mutation {
+                        login(email: "NULL_EMAIL", password: "NULL_PASSWORD") {
+                            token
+                            expiresIn
+                        }
+                    }
+                `
+            })
+        ).rejects.toThrow();
+    });
 });
