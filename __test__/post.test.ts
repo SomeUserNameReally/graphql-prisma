@@ -7,7 +7,7 @@ import { seedDatabase } from "./helpers/seedDatabase";
 const client = getApolloClient();
 const prisma = PrismaClient.client;
 
-describe("Test User model related functionality", () => {
+describe("Test Post model related functionality", () => {
     beforeAll(seedDatabase);
 
     afterAll(async () => {
