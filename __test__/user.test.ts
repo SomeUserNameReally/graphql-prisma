@@ -188,4 +188,6 @@ describe("Test User model related functionality", () => {
             })
         ).rejects.toThrow();
     });
+
+    // TODO: Add test for createUser mutation throwing on a short password.
 });
