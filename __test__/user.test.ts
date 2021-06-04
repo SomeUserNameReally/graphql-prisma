@@ -61,6 +61,8 @@ describe("Test User model related functionality", () => {
         const USER_FIELD_NAME = "user";
         const TOKEN_FIELD_NAME = "token";
 
+        // TODO: Add `hasOwnProperty` calls.
+
         const { data } = await client.mutate<{
             [MUTATION_NAME]: {
                 [USER_FIELD_NAME]: Pick<User, "id">;
@@ -111,7 +113,7 @@ describe("Test User model related functionality", () => {
         const {
             data: { users }
         } = await client.query<{
-            [QUERY_NAME]: Partial<User>[];
+            [QUERY_NAME]: (Partial<User> & object)[];
         }>({
             query: gql`
                 query getUsers {
@@ -127,6 +129,9 @@ describe("Test User model related functionality", () => {
 
         expect(Array.isArray(users)).toBe(true);
         expect(users.length).toBeGreaterThan(0);
+        users.forEach((user) =>
+            expect(user.hasOwnProperty("email")).toBe(true)
+        );
         users.forEach((user) => {
             expect(user.email).toBe("");
         });
@@ -138,11 +143,11 @@ describe("Test User model related functionality", () => {
         const {
             data: { posts }
         } = await client.query<{
-            [QUERY_NAME]: Pick<Post, "published">[];
+            [QUERY_NAME]: (Pick<Post, "published"> & object)[];
         }>({
             query: gql`
                 query getPosts {
-                    posts {
+                    ${QUERY_NAME} {
                         published
                     }
                 }
@@ -152,7 +157,7 @@ describe("Test User model related functionality", () => {
         expect(Array.isArray(posts)).toBe(true);
         expect(posts.length).toBeGreaterThan(0);
         posts.forEach((post) =>
-            expect(Object.keys(post).includes("published")).toBe(true)
+            expect(post.hasOwnProperty("published")).toBe(true)
         );
         posts.forEach((post) => expect(post.published).toBe(true));
     });
