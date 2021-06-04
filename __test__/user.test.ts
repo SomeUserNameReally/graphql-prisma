@@ -143,11 +143,12 @@ describe("Test User model related functionality", () => {
         const {
             data: { posts }
         } = await client.query<{
-            [QUERY_NAME]: (Pick<Post, "published"> & object)[];
+            [QUERY_NAME]: (Pick<Post, "id" | "published"> & object)[];
         }>({
             query: gql`
                 query getPosts {
                     ${QUERY_NAME} {
+                        id
                         published
                     }
                 }
@@ -160,5 +161,16 @@ describe("Test User model related functionality", () => {
             expect(post.hasOwnProperty("published")).toBe(true)
         );
         posts.forEach((post) => expect(post.published).toBe(true));
+
+        const allPosts = await prisma.post.findMany();
+
+        if (allPosts.length > 0) {
+            const gqlPostIds = posts.map((gqlPost) => gqlPost.id);
+
+            allPosts.forEach((post) => {
+                if (post.published)
+                    expect(gqlPostIds.includes(post.id)).toBe(true);
+            });
+        }
     });
 });
