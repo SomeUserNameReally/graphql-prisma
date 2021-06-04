@@ -98,8 +98,16 @@ export class PostCRUDResolvers {
             };
         }
 
+        if (args.own && userIdInfo) {
+            _args.where = {
+                ..._args.where,
+                authorId: {
+                    equals: userIdInfo.id
+                }
+            };
+        }
+
         return PostCRUDResolvers.CRUD_RESOLVER.posts(context, info, {
-            ...args,
             ..._args,
             orderBy
         });

@@ -491,7 +491,7 @@ type Query {
   comments(query: String): [Comment]!
   me: User!
   post(where: PostWhereUniqueInput!): Post
-  posts(cursorOnId: String, orderBy: PostOrderByInput, query: String, skip: Int = 0, take: Int = 10): [Post]!
+  posts(cursorOnId: String, orderBy: PostOrderByInput, own: Boolean = false, query: String, skip: Int = 0, take: Int = 10): [Post]!
   users(cursorOnId: String, orderBy: UserOrderByInput, query: String, skip: Int = 0, take: Int = 10): [User]!
 }
 

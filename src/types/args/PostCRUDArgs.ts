@@ -29,4 +29,9 @@ export class FindManyPostArgs<T extends PostOrderByInput = PostOrderByInput>
         nullable: true
     })
     orderBy?: T | undefined;
+
+    @Field((_type) => Boolean, {
+        nullable: true
+    })
+    own: boolean = false;
 }
