@@ -1,10 +1,10 @@
-import ApolloBoost, { gql } from "apollo-boost";
+import { gql } from "apollo-boost";
 import { PrismaClient } from "../src/prisma/client";
-import fetch from "node-fetch";
 import { Post } from "../src/prisma/generated/type-graphql";
+import { getApolloClient } from "./helpers/getApolloClient";
 import { seedDatabase } from "./helpers/seedDatabase";
 
-const client = new ApolloBoost({ uri: "http://localhost:4000", fetch });
+const client = getApolloClient();
 const prisma = PrismaClient.client;
 
 describe("Test User model related functionality", () => {
@@ -24,7 +24,7 @@ describe("Test User model related functionality", () => {
             // Is there a better way?
             // Maybe...
             // ¯\_(ツ)_/¯
-            [QUERY_NAME]: (Pick<Post, "id" | "published"> & object)[];
+            [QUERY_NAME]: Pick<Post, "id" | "published">[];
         }>({
             query: gql`
                 query getPosts {

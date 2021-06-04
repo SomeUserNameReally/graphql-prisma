@@ -1,10 +1,10 @@
-import ApolloBoost, { gql } from "apollo-boost";
+import { gql } from "apollo-boost";
 import { PrismaClient } from "../src/prisma/client";
-import fetch from "node-fetch";
 import { User } from "../src/prisma/generated/type-graphql";
-import { seedDatabase } from "./helpers/seedDatabase";
+import { getApolloClient } from "./helpers/getApolloClient";
+import { seedDatabase, userInfo } from "./helpers/seedDatabase";
 
-const client = new ApolloBoost({ uri: "http://localhost:4000", fetch });
+const client = getApolloClient();
 const prisma = PrismaClient.client;
 
 describe("Test User model related functionality", () => {
