@@ -175,7 +175,7 @@ describe("Test User model related functionality", () => {
     });
 
     test("Should throw on logging in with bad credentials", async () => {
-        expect(
+        await expect(
             client.mutate({
                 mutation: gql`
                     mutation {
