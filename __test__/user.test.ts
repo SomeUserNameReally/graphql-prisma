@@ -108,7 +108,9 @@ describe("Test User model related functionality", () => {
     test("Should expose public user profiles", async () => {
         const QUERY_NAME = "users";
 
-        const { data } = await client.query<{
+        const {
+            data: { users }
+        } = await client.query<{
             [QUERY_NAME]: Partial<User>[];
         }>({
             query: gql`
@@ -122,7 +124,6 @@ describe("Test User model related functionality", () => {
                 }
             `
         });
-        const { users } = data;
 
         expect(Array.isArray(users)).toBe(true);
         expect(users.length).toBeGreaterThan(0);
