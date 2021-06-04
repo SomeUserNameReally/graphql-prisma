@@ -2,7 +2,7 @@ import ApolloBoost, { gql } from "apollo-boost";
 import { PrismaClient } from "../src/prisma/client";
 import fetch from "node-fetch";
 import { hashSync as bcryptHashSync } from "bcrypt";
-import { User } from "../src/prisma/generated/type-graphql";
+import { Post, User } from "../src/prisma/generated/type-graphql";
 
 const client = new ApolloBoost({ uri: "http://localhost:4000", fetch });
 const prisma = PrismaClient.client;
@@ -130,5 +130,30 @@ describe("Test User model related functionality", () => {
         users.forEach((user) => {
             expect(user.email).toBe("");
         });
+    });
+
+    test("Should expose published posts", async () => {
+        const QUERY_NAME = "posts";
+
+        const {
+            data: { posts }
+        } = await client.query<{
+            [QUERY_NAME]: Pick<Post, "published">[];
+        }>({
+            query: gql`
+                query getPosts {
+                    posts {
+                        published
+                    }
+                }
+            `
+        });
+
+        expect(Array.isArray(posts)).toBe(true);
+        expect(posts.length).toBeGreaterThan(0);
+        posts.forEach((post) =>
+            expect(Object.keys(post).includes("published")).toBe(true)
+        );
+        posts.forEach((post) => expect(post.published).toBe(true));
     });
 });
