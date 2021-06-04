@@ -16,7 +16,7 @@ import { GraphQLContext } from "./typings/global";
 import { authChecker } from "./helpers/auth/authChecker";
 
 export class Server {
-    private static server: ApolloServer;
+    private static server?: ApolloServer;
 
     static async init(): Promise<void> {
         if (Server.server) return;
@@ -52,7 +52,9 @@ export class Server {
         });
 
         // Start the server
-        const { url } = await Server.server.listen(4200);
+        const { url } = await Server.server.listen(
+            process.env.NODE_ENV === "test" ? 4000 : 4200
+        );
 
         console.log(
             `Server is running, GraphQL Playground available at ${url} in env ${
@@ -64,6 +66,16 @@ export class Server {
     static async close() {
         if (!Server.server) return;
 
-        return Server.server.stop();
+        try {
+            Server.server.stop();
+            Server.server = undefined;
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
+    static isRunning() {
+        return Server.server !== undefined;
     }
 }
