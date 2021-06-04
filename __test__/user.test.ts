@@ -72,7 +72,7 @@ describe("Test User model related functionality", () => {
         const {
             data: { users }
         } = await client.query<{
-            [QUERY_NAME]: (Partial<User> & object)[];
+            [QUERY_NAME]: Partial<User>[];
         }>({
             query: gql`
                 query getUsers {
@@ -112,4 +112,35 @@ describe("Test User model related functionality", () => {
     });
 
     // TODO: Add test for createUser mutation throwing on a short password.
+
+    test("Should fetch user profile on authentication", async () => {
+        const authClient = getApolloClient(userInfo.jwt);
+        const QUERY_NAME = "me";
+
+        const { data } = userInfo;
+
+        const {
+            data: { me }
+        } = await authClient.query<{
+            [QUERY_NAME]: Partial<User>;
+        }>({
+            query: gql`
+                query {
+                    ${QUERY_NAME} {
+                        id
+                        firstName
+                        email
+                    }
+                }
+            `
+        });
+        expect(Object.keys(data || {}).length).toBeGreaterThan(0);
+        expect(data!.hasOwnProperty("id")).toBe(true);
+        expect(data!.hasOwnProperty("firstName")).toBe(true);
+        expect(data!.hasOwnProperty("email")).toBe(true);
+
+        expect(me.id).toBe(data!.id);
+        expect(me.firstName).toBe(data!.firstName);
+        expect(me.email).toBe(data!.email);
+    });
 });
