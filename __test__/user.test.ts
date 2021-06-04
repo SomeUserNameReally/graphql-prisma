@@ -165,7 +165,7 @@ describe("Test User model related functionality", () => {
         const allPosts = await prisma.post.findMany();
 
         if (allPosts.length > 0) {
-            const gqlPostIds = posts.map((gqlPost) => gqlPost.id);
+            const gqlPostIds = posts.map((post) => post.id);
 
             allPosts.forEach((post) => {
                 if (post.published)
