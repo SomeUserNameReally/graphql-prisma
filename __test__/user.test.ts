@@ -8,9 +8,11 @@ import { seedDatabase, userInfo } from "./helpers/seedDatabase";
 const client = getApolloClient();
 const prisma = PrismaClient.client;
 
+const LOGIN_MUTATION_QUERY_NAME = "login";
+
 const loginMutation = gql`
     mutation($email: String!, $password: String!) {
-        login(email: $email, password: $password) {
+        ${LOGIN_MUTATION_QUERY_NAME} (email: $email, password: $password) {
             token
             expiresIn
         }
