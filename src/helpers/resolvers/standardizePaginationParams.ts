@@ -1,7 +1,6 @@
 import { BaseCRUDArgs } from "../../types/args/BaseCRUDArgs";
-import { GenericObject } from "../../typings/utils";
 
-interface StandardizePaginationParams<T> {
+interface StandardizePaginationParams<T extends Record<string, unknown>> {
     take: number;
     skip: number;
     orderBy?: [T] | undefined;
@@ -12,7 +11,7 @@ interface StandardizePaginationParams<T> {
 
 // It may not apply to every scenario though...
 export const standardizePaginationParams = <
-    U extends GenericObject = GenericObject,
+    U extends Record<string, any> = Record<string, any>,
     T extends BaseCRUDArgs<U> = BaseCRUDArgs<U>
 >({
     take: _take,
